@@ -1,0 +1,103 @@
+'use client'
+
+import * as React from 'react'
+import { useState, FormEvent, useTransition } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { Loader2, AlertCircle } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { loginAction } from '@/lib/actions/auth.actions'
+
+export default function LoginPage() {
+  const router = useRouter()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [isPending, startTransition] = useTransition()
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+    setError('')
+
+    const formData = new FormData()
+    formData.append('email', email)
+    formData.append('password', password)
+
+    startTransition(async () => {
+      const result = await loginAction(formData)
+      if (result.error) {
+        setError(result.error)
+      }
+      if (result.redirectTo) {
+        router.push(result.redirectTo)
+      }
+    })
+  }
+
+  return (
+    <div className="p-8">
+      <div className="mb-6 text-center">
+        <h1 className="text-2xl font-bold text-gray-900">Sign In</h1>
+        <p className="mt-1 text-sm text-gray-600">
+          Welcome back — let&apos;s get you signed in.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} noValidate className="space-y-5">
+        <Input
+          label="Email address"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@example.com"
+          required
+          autoComplete="email"
+          autoFocus
+        />
+        <Input
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="••••••••"
+          required
+          autoComplete="current-password"
+        />
+
+        {error && (
+          <div
+            className="flex items-start gap-2 rounded-md bg-red-50 border border-red-200 px-3 py-2.5 text-sm text-red-700"
+            role="alert"
+          >
+            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" aria-hidden="true" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        <Button type="submit" className="w-full" size="lg" disabled={isPending}>
+          {isPending ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              Signing in...
+            </>
+          ) : (
+            'Sign In'
+          )}
+        </Button>
+      </form>
+
+      <div className="mt-6 space-y-3 text-center text-sm text-gray-600">
+        <p>
+          New volunteer?{' '}
+          <Link href="/signup" className="font-medium text-teal-600 hover:underline">
+            Sign up here &rarr;
+          </Link>
+        </p>
+        <p className="text-xs text-gray-400">
+          Forgotten your password? Contact your volunteer coordinator or admin for assistance.
+        </p>
+      </div>
+    </div>
+  )
+}

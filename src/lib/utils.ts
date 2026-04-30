@@ -1,0 +1,100 @@
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+import { format, parseISO } from 'date-fns'
+
+// ─── Styling ──────────────────────────────────────────────────────────────────
+
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs))
+}
+
+// ─── Date formatting ──────────────────────────────────────────────────────────
+
+function toDate(date: Date | string): Date {
+  if (typeof date === 'string') {
+    return parseISO(date)
+  }
+  return date
+}
+
+/**
+ * Format a date in Australian format. Default: dd/MM/yyyy
+ */
+export function formatDate(date: Date | string, fmt = 'dd/MM/yyyy'): string {
+  try {
+    return format(toDate(date), fmt)
+  } catch {
+    return ''
+  }
+}
+
+/**
+ * Format a date and time in Australian format. e.g. 25/12/2024 9:30 am
+ */
+export function formatDateTime(date: Date | string): string {
+  try {
+    return format(toDate(date), 'dd/MM/yyyy h:mm aa')
+  } catch {
+    return ''
+  }
+}
+
+// ─── Duration ─────────────────────────────────────────────────────────────────
+
+/**
+ * Format a duration in minutes to a human-readable string. e.g. "2h 30m"
+ */
+export function formatDuration(mins: number): string {
+  if (mins <= 0) return '0m'
+  const hours = Math.floor(mins / 60)
+  const minutes = mins % 60
+
+  if (hours === 0) return `${minutes}m`
+  if (minutes === 0) return `${hours}h`
+  return `${hours}h ${minutes}m`
+}
+
+// ─── Names ────────────────────────────────────────────────────────────────────
+
+/**
+ * Get initials from a first and last name. e.g. "John Smith" → "JS"
+ */
+export function getInitials(firstName: string, lastName: string): string {
+  const f = firstName.trim().charAt(0).toUpperCase()
+  const l = lastName.trim().charAt(0).toUpperCase()
+  return `${f}${l}`
+}
+
+// ─── Volunteer status ─────────────────────────────────────────────────────────
+
+const STATUS_LABELS: Record<string, string> = {
+  PENDING_INDUCTION: 'Pending Induction',
+  INDUCTED: 'Inducted',
+  ACTIVE: 'Active',
+  INACTIVE: 'Inactive',
+  PAUSED: 'Paused',
+  REMOVED: 'Removed',
+}
+
+/**
+ * Convert a VolunteerStatus enum value to a human-readable label.
+ */
+export function statusLabel(status: string): string {
+  return STATUS_LABELS[status] ?? status
+}
+
+const STATUS_COLOURS: Record<string, string> = {
+  PENDING_INDUCTION: 'bg-yellow-100 text-yellow-800',
+  INDUCTED: 'bg-blue-100 text-blue-800',
+  ACTIVE: 'bg-green-100 text-green-800',
+  INACTIVE: 'bg-gray-100 text-gray-600',
+  PAUSED: 'bg-orange-100 text-orange-800',
+  REMOVED: 'bg-red-100 text-red-800',
+}
+
+/**
+ * Return a Tailwind CSS class string for a volunteer status badge.
+ */
+export function statusColour(status: string): string {
+  return STATUS_COLOURS[status] ?? 'bg-gray-100 text-gray-600'
+}

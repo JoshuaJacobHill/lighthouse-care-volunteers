@@ -1,0 +1,459 @@
+import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import { ArrowLeft, Mail, Phone, MapPin, Calendar, User, AlertCircle } from 'lucide-react'
+import prisma from '@/lib/prisma'
+import { Avatar } from '@/components/ui/avatar'
+import { StatusBadge } from '@/components/volunteer/StatusBadge'
+import { AvailabilityGrid, type AvailabilityMap } from '@/components/volunteer/AvailabilityGrid'
+import { VolunteerTabs } from '@/components/admin/VolunteerTabs'
+import { ChangeStatusModal } from '@/components/admin/ChangeStatusModal'
+import { AddNoteModal } from '@/components/admin/AddNoteModal'
+import { SendEmailModal } from '@/components/admin/SendEmailModal'
+import { formatDate, formatDateTime, formatDuration } from '@/lib/utils'
+import { VOLUNTEER_STATUSES, SHIFT_ASSIGNMENT_STATUSES } from '@/lib/constants'
+import type { DayOfWeek, TimePeriod } from '@/components/volunteer/AvailabilityGrid'
+
+export const dynamic = 'force-dynamic'
+
+export default async function VolunteerProfilePage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+
+  const volunteer = await prisma.volunteerProfile.findUnique({
+    where: { id },
+    include: {
+      user: true,
+      availability: true,
+      inductionProgress: { include: { section: true } },
+      shiftAssignments: {
+        include: { shift: { include: { location: true, department: true } } },
+        orderBy: { shift: { date: 'desc' } },
+        take: 20,
+      },
+      attendanceRecords: {
+        include: { location: true },
+        orderBy: { signInAt: 'desc' },
+        take: 20,
+      },
+      adminNotes: {
+        include: { createdBy: true },
+        orderBy: { createdAt: 'desc' },
+      },
+      emailLogs: {
+        orderBy: { createdAt: 'desc' },
+        take: 20,
+      },
+      quizAnswers: true,
+    },
+  })
+
+  if (!volunteer) notFound()
+
+  const fullName = `${volunteer.firstName} ${volunteer.lastName}`
+
+  // Build availability map from DB records
+  const availabilityMap: AvailabilityMap = {}
+  for (const a of volunteer.availability) {
+    const day = a.dayOfWeek as DayOfWeek
+    const period = a.timePeriod as TimePeriod
+    if (!availabilityMap[day]) availabilityMap[day] = {}
+    availabilityMap[day]![period] = true
+  }
+
+  // Induction progress
+  const totalSections = volunteer.inductionProgress.length
+  const completedSections = volunteer.inductionProgress.filter((p) => p.completed).length
+
+  // Total attendance hours
+  const totalMins = volunteer.attendanceRecords.reduce(
+    (sum, r) => sum + (r.durationMins ?? 0),
+    0
+  )
+
+  // ─── Tab content ─────────────────────────────────────────────────────────────
+
+  const detailsTab = (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <section className="space-y-3">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+          Contact
+        </h3>
+        <InfoRow label="Email" value={volunteer.email} />
+        <InfoRow label="Mobile" value={volunteer.mobile} />
+        <InfoRow
+          label="Date of Birth"
+          value={volunteer.dateOfBirth ? formatDate(volunteer.dateOfBirth) : undefined}
+        />
+      </section>
+
+      <section className="space-y-3">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+          Address
+        </h3>
+        <InfoRow label="Street" value={volunteer.addressLine1} />
+        {volunteer.addressLine2 && <InfoRow label="" value={volunteer.addressLine2} />}
+        <InfoRow
+          label="Suburb"
+          value={[volunteer.suburb, volunteer.state, volunteer.postcode]
+            .filter(Boolean)
+            .join(' ') || undefined}
+        />
+      </section>
+
+      <section className="space-y-3">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+          Emergency Contact
+        </h3>
+        <InfoRow label="Name" value={volunteer.emergencyName} />
+        <InfoRow label="Phone" value={volunteer.emergencyPhone} />
+        <InfoRow label="Relationship" value={volunteer.emergencyRelation} />
+      </section>
+
+      <section className="space-y-3">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+          Preferences
+        </h3>
+        <InfoRow
+          label="Locations"
+          value={volunteer.preferredLocations.join(', ') || undefined}
+        />
+        <InfoRow
+          label="Areas of Interest"
+          value={volunteer.areasOfInterest.join(', ') || undefined}
+        />
+        <InfoRow label="Blue Card Status" value={volunteer.blueCardStatus} />
+        {volunteer.blueCardNumber && (
+          <InfoRow label="Blue Card Number" value={volunteer.blueCardNumber} />
+        )}
+        {volunteer.blueCardExpiry && (
+          <InfoRow
+            label="Blue Card Expiry"
+            value={formatDate(volunteer.blueCardExpiry)}
+          />
+        )}
+      </section>
+
+      {(volunteer.medicalNotes || volunteer.accessibilityNeeds || volunteer.notes) && (
+        <section className="sm:col-span-2 space-y-3">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+            Additional Notes
+          </h3>
+          {volunteer.medicalNotes && (
+            <InfoRow label="Medical" value={volunteer.medicalNotes} />
+          )}
+          {volunteer.accessibilityNeeds && (
+            <InfoRow label="Accessibility" value={volunteer.accessibilityNeeds} />
+          )}
+          {volunteer.notes && <InfoRow label="Notes" value={volunteer.notes} />}
+        </section>
+      )}
+    </div>
+  )
+
+  const availabilityTab = (
+    <AvailabilityGrid value={availabilityMap} readOnly />
+  )
+
+  const shiftsTab = (
+    volunteer.shiftAssignments.length === 0 ? (
+      <EmptyState message="No shift assignments recorded yet." />
+    ) : (
+      <div className="overflow-x-auto rounded-lg border border-gray-200">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-gray-100 bg-gray-50">
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Date</th>
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Location</th>
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 hidden md:table-cell">Department</th>
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Status</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-50">
+            {volunteer.shiftAssignments.map((a) => (
+              <tr key={a.id} className="hover:bg-gray-50">
+                <td className="px-4 py-3 text-gray-900">{formatDate(a.shift.date)}</td>
+                <td className="px-4 py-3 text-gray-600">{a.shift.location.name}</td>
+                <td className="px-4 py-3 text-gray-600 hidden md:table-cell">
+                  {a.shift.department?.name ?? '—'}
+                </td>
+                <td className="px-4 py-3">
+                  <ShiftStatusBadge status={a.status} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )
+  )
+
+  const attendanceTab = (
+    <div className="space-y-4">
+      <p className="text-sm font-medium text-gray-700">
+        Total volunteer hours:{' '}
+        <span className="font-bold text-teal-700">{formatDuration(totalMins)}</span>
+      </p>
+      {volunteer.attendanceRecords.length === 0 ? (
+        <EmptyState message="No attendance records found." />
+      ) : (
+        <div className="overflow-x-auto rounded-lg border border-gray-200">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-gray-100 bg-gray-50">
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Date</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Sign In</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Sign Out</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 hidden md:table-cell">Duration</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 hidden lg:table-cell">Location</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {volunteer.attendanceRecords.map((r) => (
+                <tr key={r.id} className="hover:bg-gray-50">
+                  <td className="px-4 py-3 text-gray-900">{formatDate(r.signInAt)}</td>
+                  <td className="px-4 py-3 text-gray-600">{formatDateTime(r.signInAt)}</td>
+                  <td className="px-4 py-3 text-gray-600">
+                    {r.signOutAt ? formatDateTime(r.signOutAt) : (
+                      <span className="inline-flex items-center gap-1 text-green-700">
+                        <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+                        On site
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-gray-600 hidden md:table-cell">
+                    {r.durationMins != null ? formatDuration(r.durationMins) : '—'}
+                  </td>
+                  <td className="px-4 py-3 text-gray-600 hidden lg:table-cell">
+                    {r.location?.name ?? '—'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  )
+
+  const notesTab = (
+    <div className="space-y-6">
+      <div className="flex justify-end">
+        <AddNoteModal volunteerId={volunteer.id} triggerLabel="Add Note" />
+      </div>
+      {volunteer.adminNotes.length === 0 ? (
+        <EmptyState message="No notes recorded yet." />
+      ) : (
+        <div className="space-y-3">
+          {volunteer.adminNotes.map((note) => (
+            <div
+              key={note.id}
+              className="rounded-lg border border-gray-200 bg-white p-4"
+            >
+              <div className="flex items-start justify-between gap-4 mb-2">
+                <span className="text-xs font-medium text-gray-500">
+                  {note.createdBy.name ?? note.createdBy.email} &mdash;{' '}
+                  {formatDateTime(note.createdAt)}
+                </span>
+                {note.isInternal && (
+                  <span className="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+                    Internal
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-gray-800 whitespace-pre-wrap">{note.content}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+
+  const emailsTab = (
+    volunteer.emailLogs.length === 0 ? (
+      <EmptyState message="No emails have been sent to this volunteer." />
+    ) : (
+      <div className="overflow-x-auto rounded-lg border border-gray-200">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-gray-100 bg-gray-50">
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Date</th>
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Subject</th>
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 hidden md:table-cell">Status</th>
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 hidden lg:table-cell">Template</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-50">
+            {volunteer.emailLogs.map((log) => (
+              <tr key={log.id} className="hover:bg-gray-50">
+                <td className="px-4 py-3 text-gray-600">{formatDate(log.createdAt)}</td>
+                <td className="px-4 py-3 text-gray-900">{log.subject}</td>
+                <td className="px-4 py-3 hidden md:table-cell">
+                  <EmailStatusBadge status={log.status} />
+                </td>
+                <td className="px-4 py-3 text-gray-600 hidden lg:table-cell">
+                  {log.templateType ?? '—'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )
+  )
+
+  return (
+    <div className="space-y-6">
+      {/* Back link */}
+      <Link
+        href="/admin/volunteers"
+        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700"
+      >
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        Back to Volunteers
+      </Link>
+
+      {/* Profile header */}
+      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
+          <Avatar
+            name={fullName}
+            src={volunteer.avatarUrl ?? undefined}
+            size="xl"
+          />
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-2xl font-bold text-gray-900">{fullName}</h1>
+              <StatusBadge status={volunteer.status} />
+            </div>
+            <p className="mt-1 text-sm text-gray-500">
+              Joined {formatDate(volunteer.joinedAt)}
+              {volunteer.lastAttendedAt && (
+                <> &middot; Last attended {formatDate(volunteer.lastAttendedAt)}</>
+              )}
+            </p>
+
+            {/* Quick info row */}
+            <div className="mt-3 flex flex-wrap gap-4 text-sm text-gray-600">
+              <span className="flex items-center gap-1.5">
+                <Mail className="h-4 w-4 text-gray-400" aria-hidden="true" />
+                {volunteer.email}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Phone className="h-4 w-4 text-gray-400" aria-hidden="true" />
+                {volunteer.mobile}
+              </span>
+              {volunteer.suburb && (
+                <span className="flex items-center gap-1.5">
+                  <MapPin className="h-4 w-4 text-gray-400" aria-hidden="true" />
+                  {volunteer.suburb}
+                </span>
+              )}
+            </div>
+
+            {/* Induction progress */}
+            {totalSections > 0 && (
+              <div className="mt-4">
+                <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
+                  <span>Induction progress</span>
+                  <span>{completedSections} of {totalSections} sections complete</span>
+                </div>
+                <div className="h-2 w-full rounded-full bg-gray-100">
+                  <div
+                    className="h-2 rounded-full bg-teal-600 transition-all"
+                    style={{ width: `${Math.round((completedSections / totalSections) * 100)}%` }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href={`/admin/volunteers/${volunteer.id}/edit`}
+              className="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-600"
+            >
+              Edit Profile
+            </Link>
+            <ChangeStatusModal
+              volunteerId={volunteer.id}
+              currentStatus={volunteer.status}
+            />
+            <SendEmailModal volunteerId={volunteer.id} volunteerName={fullName} />
+            <AddNoteModal volunteerId={volunteer.id} />
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <VolunteerTabs
+          tabs={[
+            { id: 'details', label: 'Details', content: detailsTab },
+            { id: 'availability', label: 'Availability', content: availabilityTab },
+            { id: 'shifts', label: 'Shifts', content: shiftsTab },
+            { id: 'attendance', label: 'Attendance', content: attendanceTab },
+            { id: 'notes', label: `Notes (${volunteer.adminNotes.length})`, content: notesTab },
+            { id: 'emails', label: 'Emails', content: emailsTab },
+          ]}
+        />
+      </div>
+    </div>
+  )
+}
+
+// ─── Small helpers ────────────────────────────────────────────────────────────
+
+function InfoRow({ label, value }: { label: string; value?: string | null }) {
+  if (!value) return null
+  return (
+    <div className="flex gap-2 text-sm">
+      {label && (
+        <span className="w-32 shrink-0 font-medium text-gray-500">{label}</span>
+      )}
+      <span className="text-gray-800 break-all">{value}</span>
+    </div>
+  )
+}
+
+function EmptyState({ message }: { message: string }) {
+  return (
+    <div className="rounded-lg border border-dashed border-gray-200 py-12 text-center">
+      <p className="text-sm text-gray-500">{message}</p>
+    </div>
+  )
+}
+
+function ShiftStatusBadge({ status }: { status: string }) {
+  const colours: Record<string, string> = {
+    SCHEDULED: 'bg-blue-100 text-blue-800',
+    CONFIRMED: 'bg-green-100 text-green-800',
+    CANCELLED_BY_VOLUNTEER: 'bg-gray-100 text-gray-700',
+    ATTENDED: 'bg-teal-100 text-teal-800',
+    NO_SHOW: 'bg-red-100 text-red-800',
+    ADMIN_CANCELLED: 'bg-orange-100 text-orange-800',
+  }
+  const labels: Record<string, string> = SHIFT_ASSIGNMENT_STATUSES
+  return (
+    <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${colours[status] ?? 'bg-gray-100 text-gray-700'}`}>
+      {labels[status] ?? status}
+    </span>
+  )
+}
+
+function EmailStatusBadge({ status }: { status: string }) {
+  const colours: Record<string, string> = {
+    PENDING: 'bg-yellow-100 text-yellow-800',
+    SENT: 'bg-green-100 text-green-800',
+    FAILED: 'bg-red-100 text-red-800',
+    BOUNCED: 'bg-orange-100 text-orange-800',
+  }
+  return (
+    <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${colours[status] ?? 'bg-gray-100 text-gray-700'}`}>
+      {status.charAt(0) + status.slice(1).toLowerCase()}
+    </span>
+  )
+}

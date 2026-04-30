@@ -1,0 +1,601 @@
+'use server'
+
+import prisma from '@/lib/prisma'
+import { getSession } from '@/lib/auth'
+import { sendEmail } from '@/lib/email'
+import { formatDate } from '@/lib/utils'
+import type { VolunteerStatus } from '@prisma/client'
+
+interface ActionResult {
+  success: boolean
+  error?: string
+  data?: unknown
+}
+
+// ─── Auth helper ──────────────────────────────────────────────────────────────
+
+async function requireAdminSession(): Promise<{ userId: string; role: string }> {
+  const session = await getSession()
+  if (!session) {
+    throw new Error('Not authenticated')
+  }
+  if (session.role !== 'ADMIN' && session.role !== 'SUPER_ADMIN') {
+    throw new Error('Insufficient permissions')
+  }
+  return { userId: session.userId, role: session.role }
+}
+
+// ─── Volunteer status update ──────────────────────────────────────────────────
+
+export async function updateVolunteerStatusAction(
+  volunteerId: string,
+  status: string
+): Promise<ActionResult> {
+  let adminSession: { userId: string; role: string }
+  try {
+    adminSession = await requireAdminSession()
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+
+  const validStatuses: VolunteerStatus[] = [
+    'PENDING_INDUCTION',
+    'INDUCTED',
+    'ACTIVE',
+    'INACTIVE',
+    'PAUSED',
+    'REMOVED',
+  ]
+
+  if (!validStatuses.includes(status as VolunteerStatus)) {
+    return { success: false, error: `Invalid status: ${status}` }
+  }
+
+  try {
+    const updated = await prisma.volunteerProfile.update({
+      where: { id: volunteerId },
+      data: {
+        status: status as VolunteerStatus,
+        deactivatedAt:
+          status === 'REMOVED' || status === 'INACTIVE' ? new Date() : undefined,
+      },
+    })
+
+    // Add an audit note
+    await prisma.adminNote.create({
+      data: {
+        volunteerId,
+        content: `Status changed to ${status} by admin.`,
+        isInternal: true,
+        createdById: adminSession.userId,
+      },
+    })
+
+    return { success: true, data: { status: updated.status } }
+  } catch (err) {
+    console.error('[updateVolunteerStatusAction]', err)
+    return { success: false, error: 'Failed to update volunteer status.' }
+  }
+}
+
+// ─── Admin notes ──────────────────────────────────────────────────────────────
+
+export async function addAdminNoteAction(
+  volunteerId: string,
+  content: string
+): Promise<ActionResult> {
+  let adminSession: { userId: string; role: string }
+  try {
+    adminSession = await requireAdminSession()
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+
+  if (!content || content.trim().length === 0) {
+    return { success: false, error: 'Note content cannot be empty.' }
+  }
+
+  try {
+    const note = await prisma.adminNote.create({
+      data: {
+        volunteerId,
+        content: content.trim(),
+        isInternal: true,
+        createdById: adminSession.userId,
+      },
+    })
+
+    return { success: true, data: note }
+  } catch (err) {
+    console.error('[addAdminNoteAction]', err)
+    return { success: false, error: 'Failed to create note.' }
+  }
+}
+
+// ─── Send email to volunteer ──────────────────────────────────────────────────
+
+export async function sendEmailToVolunteerAction(
+  volunteerId: string,
+  subject: string,
+  html: string
+): Promise<ActionResult> {
+  let adminSession: { userId: string; role: string }
+  try {
+    adminSession = await requireAdminSession()
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+
+  if (!subject || !html) {
+    return { success: false, error: 'Subject and message are required.' }
+  }
+
+  try {
+    const volunteer = await prisma.volunteerProfile.findUnique({
+      where: { id: volunteerId },
+      select: { email: true, firstName: true, lastName: true },
+    })
+
+    if (!volunteer) {
+      return { success: false, error: 'Volunteer not found.' }
+    }
+
+    const result = await sendEmail({
+      to: volunteer.email,
+      subject,
+      html,
+      templateType: 'CUSTOM',
+      volunteerId,
+    })
+
+    if (!result.success) {
+      return { success: false, error: result.error ?? 'Failed to send email.' }
+    }
+
+    // Audit note
+    await prisma.adminNote.create({
+      data: {
+        volunteerId,
+        content: `Email sent with subject: "${subject}"`,
+        isInternal: true,
+        createdById: adminSession.userId,
+      },
+    })
+
+    return { success: true }
+  } catch (err) {
+    console.error('[sendEmailToVolunteerAction]', err)
+    return { success: false, error: 'Failed to send email.' }
+  }
+}
+
+// ─── Manual sign-out ──────────────────────────────────────────────────────────
+
+export async function manualSignOutAction(attendanceId: string): Promise<ActionResult> {
+  try {
+    await requireAdminSession()
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+
+  try {
+    const record = await prisma.attendanceRecord.findUnique({
+      where: { id: attendanceId },
+    })
+
+    if (!record) {
+      return { success: false, error: 'Attendance record not found.' }
+    }
+
+    if (record.signOutAt) {
+      return { success: false, error: 'Volunteer has already been signed out.' }
+    }
+
+    const signOutAt = new Date()
+    const durationMins = Math.round(
+      (signOutAt.getTime() - record.signInAt.getTime()) / 1000 / 60
+    )
+
+    const updated = await prisma.attendanceRecord.update({
+      where: { id: attendanceId },
+      data: {
+        signOutAt,
+        durationMins,
+        notes: record.notes
+          ? `${record.notes} [Manual sign-out by admin]`
+          : '[Manual sign-out by admin]',
+      },
+    })
+
+    // Update volunteer's last active timestamp
+    await prisma.volunteerProfile.update({
+      where: { id: record.volunteerId },
+      data: { lastAttendedAt: signOutAt, lastActiveAt: signOutAt },
+    })
+
+    return { success: true, data: { durationMins: updated.durationMins } }
+  } catch (err) {
+    console.error('[manualSignOutAction]', err)
+    return { success: false, error: 'Failed to sign out volunteer.' }
+  }
+}
+
+// ─── Create volunteer ─────────────────────────────────────────────────────────
+
+interface CreateVolunteerData {
+  firstName: string
+  lastName: string
+  email: string
+  mobile: string
+  dateOfBirth?: string
+  addressLine1?: string
+  addressLine2?: string
+  suburb?: string
+  state?: string
+  postcode?: string
+  emergencyName?: string
+  emergencyPhone?: string
+  emergencyRelation?: string
+  status?: string
+  notes?: string
+  preferredLocations?: string[]
+  areasOfInterest?: string[]
+}
+
+export async function createVolunteerAction(
+  data: CreateVolunteerData
+): Promise<{ success: boolean; volunteerId?: string; error?: string }> {
+  try {
+    await requireAdminSession()
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+
+  if (!data.firstName || !data.lastName || !data.email || !data.mobile) {
+    return { success: false, error: 'First name, last name, email and mobile are required.' }
+  }
+
+  try {
+    // Check for existing user
+    const existing = await prisma.user.findUnique({ where: { email: data.email } })
+    if (existing) {
+      return { success: false, error: 'A user with this email address already exists.' }
+    }
+
+    const user = await prisma.user.create({
+      data: {
+        email: data.email,
+        name: `${data.firstName} ${data.lastName}`,
+        role: 'VOLUNTEER',
+        volunteerProfile: {
+          create: {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            mobile: data.mobile,
+            dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : undefined,
+            addressLine1: data.addressLine1 || undefined,
+            addressLine2: data.addressLine2 || undefined,
+            suburb: data.suburb || undefined,
+            state: data.state || undefined,
+            postcode: data.postcode || undefined,
+            emergencyName: data.emergencyName || undefined,
+            emergencyPhone: data.emergencyPhone || undefined,
+            emergencyRelation: data.emergencyRelation || undefined,
+            status: (data.status as VolunteerStatus) ?? 'PENDING_INDUCTION',
+            notes: data.notes || undefined,
+            preferredLocations: data.preferredLocations ?? [],
+            areasOfInterest: data.areasOfInterest ?? [],
+          },
+        },
+      },
+      include: { volunteerProfile: true },
+    })
+
+    return { success: true, volunteerId: user.volunteerProfile?.id }
+  } catch (err) {
+    console.error('[createVolunteerAction]', err)
+    return { success: false, error: 'Failed to create volunteer. Please try again.' }
+  }
+}
+
+// ─── Manual guest sign-out ────────────────────────────────────────────────────
+
+export async function manualGuestSignOutAction(guestId: string): Promise<ActionResult> {
+  try {
+    await requireAdminSession()
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+
+  try {
+    const record = await prisma.guestAttendanceRecord.findUnique({ where: { id: guestId } })
+    if (!record) return { success: false, error: 'Guest record not found.' }
+    if (record.signOutAt) return { success: false, error: 'Guest has already been signed out.' }
+
+    const signOutAt = new Date()
+    const durationMins = Math.round(
+      (signOutAt.getTime() - record.signInAt.getTime()) / 1000 / 60
+    )
+
+    await prisma.guestAttendanceRecord.update({
+      where: { id: guestId },
+      data: { signOutAt, durationMins },
+    })
+
+    return { success: true, data: { durationMins } }
+  } catch (err) {
+    console.error('[manualGuestSignOutAction]', err)
+    return { success: false, error: 'Failed to sign out guest.' }
+  }
+}
+
+// ─── Induction sections ───────────────────────────────────────────────────────
+
+interface InductionSectionData {
+  title: string
+  content: string
+  sortOrder: number
+  isRequired: boolean
+  isActive: boolean
+}
+
+export async function updateInductionSectionAction(
+  id: string | null,
+  data: InductionSectionData
+): Promise<ActionResult> {
+  try {
+    await requireAdminSession()
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+
+  if (!data.title || !data.title.trim()) {
+    return { success: false, error: 'Title is required.' }
+  }
+  if (!data.content || !data.content.trim()) {
+    return { success: false, error: 'Content is required.' }
+  }
+
+  try {
+    let section
+    if (id) {
+      section = await prisma.inductionSection.update({
+        where: { id },
+        data: {
+          title: data.title.trim(),
+          content: data.content.trim(),
+          sortOrder: data.sortOrder,
+          isRequired: data.isRequired,
+          isActive: data.isActive,
+        },
+      })
+    } else {
+      section = await prisma.inductionSection.create({
+        data: {
+          title: data.title.trim(),
+          content: data.content.trim(),
+          sortOrder: data.sortOrder,
+          isRequired: data.isRequired,
+          isActive: data.isActive,
+        },
+      })
+    }
+    return { success: true, data: section }
+  } catch (err) {
+    console.error('[updateInductionSectionAction]', err)
+    return { success: false, error: 'Failed to save induction section.' }
+  }
+}
+
+export async function deleteInductionSectionAction(id: string): Promise<ActionResult> {
+  try {
+    await requireAdminSession()
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+
+  try {
+    await prisma.inductionSection.delete({ where: { id } })
+    return { success: true }
+  } catch (err) {
+    console.error('[deleteInductionSectionAction]', err)
+    return { success: false, error: 'Failed to delete induction section.' }
+  }
+}
+
+// ─── Quiz questions ───────────────────────────────────────────────────────────
+
+interface QuizOptionData {
+  id?: string
+  optionText: string
+  isCorrect: boolean
+  sortOrder?: number
+}
+
+interface QuizQuestionData {
+  question: string
+  sortOrder: number
+  options: QuizOptionData[]
+}
+
+export async function updateQuizQuestionAction(
+  id: string | null,
+  data: QuizQuestionData
+): Promise<ActionResult> {
+  try {
+    await requireAdminSession()
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+
+  if (!data.question || !data.question.trim()) {
+    return { success: false, error: 'Question text is required.' }
+  }
+  if (!data.options || data.options.length < 2) {
+    return { success: false, error: 'At least two options are required.' }
+  }
+  if (!data.options.some(o => o.isCorrect)) {
+    return { success: false, error: 'At least one option must be marked as correct.' }
+  }
+
+  try {
+    let question
+    if (id) {
+      // Delete all existing options then recreate (simplest approach for replacing)
+      await prisma.inductionQuizOption.deleteMany({ where: { questionId: id } })
+      question = await prisma.inductionQuizQuestion.update({
+        where: { id },
+        data: {
+          question: data.question.trim(),
+          sortOrder: data.sortOrder,
+          options: {
+            create: data.options.map((o, i) => ({
+              optionText: o.optionText.trim(),
+              isCorrect: o.isCorrect,
+              sortOrder: o.sortOrder ?? i,
+            })),
+          },
+        },
+        include: { options: { orderBy: { sortOrder: 'asc' } } },
+      })
+    } else {
+      question = await prisma.inductionQuizQuestion.create({
+        data: {
+          question: data.question.trim(),
+          sortOrder: data.sortOrder,
+          options: {
+            create: data.options.map((o, i) => ({
+              optionText: o.optionText.trim(),
+              isCorrect: o.isCorrect,
+              sortOrder: o.sortOrder ?? i,
+            })),
+          },
+        },
+        include: { options: { orderBy: { sortOrder: 'asc' } } },
+      })
+    }
+    return { success: true, data: question }
+  } catch (err) {
+    console.error('[updateQuizQuestionAction]', err)
+    return { success: false, error: 'Failed to save quiz question.' }
+  }
+}
+
+export async function deleteQuizQuestionAction(id: string): Promise<ActionResult> {
+  try {
+    await requireAdminSession()
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+
+  try {
+    await prisma.inductionQuizQuestion.delete({ where: { id } })
+    return { success: true }
+  } catch (err) {
+    console.error('[deleteQuizQuestionAction]', err)
+    return { success: false, error: 'Failed to delete quiz question.' }
+  }
+}
+
+// ─── Export volunteers CSV ────────────────────────────────────────────────────
+
+export async function exportVolunteersCSVAction(): Promise<{
+  success: boolean
+  csv?: string
+  error?: string
+}> {
+  try {
+    await requireAdminSession()
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+
+  try {
+    const volunteers = await prisma.volunteerProfile.findMany({
+      orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],
+      include: {
+        availability: true,
+        attendanceRecords: {
+          select: { durationMins: true },
+        },
+      },
+    })
+
+    const headers = [
+      'First Name',
+      'Last Name',
+      'Email',
+      'Mobile',
+      'Status',
+      'Suburb',
+      'State',
+      'Postcode',
+      'Date of Birth',
+      'Emergency Contact',
+      'Emergency Phone',
+      'Preferred Locations',
+      'Areas of Interest',
+      'Blue Card Status',
+      'Blue Card Number',
+      'Blue Card Expiry',
+      'Joined',
+      'Last Active',
+      'Total Hours',
+      'Agreed to Terms',
+      'Consent Email Updates',
+      'Consent SMS Updates',
+    ]
+
+    function csvEscape(value: string | null | undefined): string {
+      if (value == null) return ''
+      const str = String(value)
+      if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`
+      }
+      return str
+    }
+
+    const rows = volunteers.map((v: typeof volunteers[number]) => {
+      const totalMins = v.attendanceRecords.reduce(
+        (sum: number, r: { durationMins: number | null }) => sum + (r.durationMins ?? 0),
+        0
+      )
+      const totalHours = (totalMins / 60).toFixed(1)
+
+      return [
+        v.firstName,
+        v.lastName,
+        v.email,
+        v.mobile,
+        v.status,
+        v.suburb ?? '',
+        v.state ?? '',
+        v.postcode ?? '',
+        v.dateOfBirth ? formatDate(v.dateOfBirth) : '',
+        v.emergencyName ?? '',
+        v.emergencyPhone ?? '',
+        v.preferredLocations.join('; '),
+        v.areasOfInterest.join('; '),
+        v.blueCardStatus,
+        v.blueCardNumber ?? '',
+        v.blueCardExpiry ? formatDate(v.blueCardExpiry) : '',
+        formatDate(v.joinedAt),
+        v.lastActiveAt ? formatDate(v.lastActiveAt) : '',
+        totalHours,
+        v.agreedToTerms ? 'Yes' : 'No',
+        v.consentEmailUpdates ? 'Yes' : 'No',
+        v.consentSmsUpdates ? 'Yes' : 'No',
+      ]
+        .map(csvEscape)
+        .join(',')
+    })
+
+    const csv = [headers.join(','), ...rows].join('\n')
+
+    return { success: true, csv }
+  } catch (err) {
+    console.error('[exportVolunteersCSVAction]', err)
+    return { success: false, error: 'Failed to export volunteers.' }
+  }
+}
