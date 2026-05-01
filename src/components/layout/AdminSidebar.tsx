@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard,
@@ -81,15 +82,27 @@ export function AdminSidebar({ collapsed = false, onCollapsedChange }: AdminSide
       {/* Logo area */}
       <div className={clsx('flex items-center border-b border-gray-200 px-4 py-4', collapsed ? 'justify-center' : 'gap-2')}>
         {!collapsed && (
-          <div className="flex flex-col leading-none">
-            <span className="font-bold text-orange-600 text-sm">Lighthouse Care</span>
-            <span className="text-xs text-gray-500">Admin</span>
-          </div>
+          <Link href="/admin" className="flex flex-col gap-0.5">
+            <Image
+              src="/logo-inline-black.png"
+              alt="Lighthouse Care"
+              width={150}
+              height={40}
+              className="h-7 w-auto"
+            />
+            <span className="text-xs text-gray-500 pl-0.5">Admin</span>
+          </Link>
         )}
         {collapsed && (
-          <div className="h-8 w-8 rounded-md bg-orange-500 flex items-center justify-center" aria-hidden="true">
-            <span className="text-white font-bold text-xs">LC</span>
-          </div>
+          <Link href="/admin">
+            <Image
+              src="/logo-square.png"
+              alt="Lighthouse Care"
+              width={32}
+              height={32}
+              className="h-8 w-8 rounded"
+            />
+          </Link>
         )}
       </div>
 
@@ -163,9 +176,15 @@ export function AdminSidebar({ collapsed = false, onCollapsedChange }: AdminSide
           {/* Panel */}
           <aside className="relative z-50 flex w-64 flex-col bg-white shadow-xl">
             <div className="flex items-center justify-between border-b border-gray-200 px-4 py-4">
-              <div className="flex flex-col leading-none">
-                <span className="font-bold text-orange-600 text-sm">Lighthouse Care</span>
-                <span className="text-xs text-gray-500">Admin</span>
+              <div className="flex flex-col gap-0.5">
+                <Image
+                  src="/logo-inline-black.png"
+                  alt="Lighthouse Care"
+                  width={150}
+                  height={40}
+                  className="h-7 w-auto"
+                />
+                <span className="text-xs text-gray-500 pl-0.5">Admin</span>
               </div>
               <button
                 type="button"

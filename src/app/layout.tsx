@@ -17,6 +17,11 @@ export const metadata: Metadata = {
     'The volunteer management portal for Lighthouse Care — an Australian not-for-profit providing affordable groceries and food relief to families across South East Queensland.',
   keywords: ['volunteer', 'Lighthouse Care', 'Logan', 'Queensland', 'charity', 'food relief'],
   authors: [{ name: 'Lighthouse Care' }],
+  icons: {
+    icon: '/Favicon.png',
+    shortcut: '/Favicon.png',
+    apple: '/Favicon.png',
+  },
   openGraph: {
     siteName: 'Lighthouse Care Volunteers',
     locale: 'en_AU',
