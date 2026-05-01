@@ -12,7 +12,7 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select'
-import { LOCATIONS, AREAS_OF_INTEREST, VOLUNTEER_STATUSES, AUSTRALIAN_STATES } from '@/lib/constants'
+import { LOCATIONS, VOLUNTEER_STATUSES, AUSTRALIAN_STATES } from '@/lib/constants'
 import { createVolunteerAction } from '@/lib/actions/admin.actions'
 
 export function NewVolunteerForm() {
@@ -20,7 +20,6 @@ export function NewVolunteerForm() {
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   const [selectedLocations, setSelectedLocations] = React.useState<string[]>([])
-  const [selectedAreas, setSelectedAreas] = React.useState<string[]>([])
 
   function toggleMulti(
     value: string,
@@ -57,7 +56,7 @@ export function NewVolunteerForm() {
       status: fd.get('status') as string,
       notes: fd.get('notes') as string,
       preferredLocations: selectedLocations,
-      areasOfInterest: selectedAreas,
+      areasOfInterest: [] as string[],
     }
 
     const result = await createVolunteerAction(data)
@@ -123,12 +122,10 @@ export function NewVolunteerForm() {
         </div>
       </section>
 
-      {/* Preferences */}
+      {/* Preferred store */}
       <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm space-y-5">
-        <h2 className="text-base font-semibold text-gray-900">Preferences</h2>
-
+        <h2 className="text-base font-semibold text-gray-900">Preferred Store</h2>
         <div>
-          <p className="text-sm font-medium text-gray-700 mb-2">Preferred Locations</p>
           <div className="flex flex-wrap gap-2">
             {LOCATIONS.map((loc) => (
               <button
@@ -142,26 +139,6 @@ export function NewVolunteerForm() {
                 }`}
               >
                 {loc}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <p className="text-sm font-medium text-gray-700 mb-2">Areas of Interest</p>
-          <div className="flex flex-wrap gap-2">
-            {AREAS_OF_INTEREST.map((area) => (
-              <button
-                key={area}
-                type="button"
-                onClick={() => toggleMulti(area, selectedAreas, setSelectedAreas)}
-                className={`rounded-full border px-3 py-1 text-sm transition-colors ${
-                  selectedAreas.includes(area)
-                    ? 'border-orange-500 bg-orange-500 text-white'
-                    : 'border-gray-300 bg-white text-gray-700 hover:border-orange-400 hover:bg-orange-50'
-                }`}
-              >
-                {area}
               </button>
             ))}
           </div>

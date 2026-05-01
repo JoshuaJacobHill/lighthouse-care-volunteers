@@ -318,6 +318,29 @@ export async function notifyCannotAttendAction(
   }
 }
 
+// ─── Save induction answers (admin) ──────────────────────────────────────────
+
+export async function saveInductionAnswersAction(
+  volunteerId: string,
+  answers: Record<string, string>
+): Promise<ActionResult> {
+  const session = await getSession()
+  if (!session || (session.role !== 'ADMIN' && session.role !== 'SUPER_ADMIN')) {
+    return { success: false, error: 'Not authorised' }
+  }
+
+  try {
+    await prisma.volunteerProfile.update({
+      where: { id: volunteerId },
+      data: { inductionAnswers: answers },
+    })
+    return { success: true }
+  } catch (err) {
+    console.error('[saveInductionAnswersAction]', err)
+    return { success: false, error: 'Failed to save answers. Please try again.' }
+  }
+}
+
 // ─── Message to admin ─────────────────────────────────────────────────────────
 
 export async function submitMessageToAdminAction(message: string): Promise<ActionResult> {

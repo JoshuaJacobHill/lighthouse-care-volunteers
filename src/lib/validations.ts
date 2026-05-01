@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { DAYS_OF_WEEK, TIME_PERIODS, LOCATIONS, AREAS_OF_INTEREST } from '@/lib/constants'
+import { DAYS_OF_WEEK, TIME_PERIODS, LOCATIONS } from '@/lib/constants'
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
@@ -14,7 +14,6 @@ export type LoginInput = z.infer<typeof loginSchema>
 const DAYS_ENUM = [...DAYS_OF_WEEK] as [string, ...string[]]
 const PERIODS_ENUM = [...TIME_PERIODS] as [string, ...string[]]
 const LOCATIONS_ENUM = [...LOCATIONS] as [string, ...string[]]
-const AREAS_ENUM = [...AREAS_OF_INTEREST] as [string, ...string[]]
 
 // ─── Volunteer signup ─────────────────────────────────────────────────────────
 
@@ -51,12 +50,12 @@ export const volunteerSignupSchema = z.object({
   emergencyPhone: z.string().min(10, 'Emergency contact phone is required'),
   emergencyRelation: z.string().optional(),
 
-  // Preferences
-  preferredLocations: z.array(z.enum(LOCATIONS_ENUM)).optional().default([]),
-  areasOfInterest: z
-    .array(z.enum(AREAS_ENUM))
-    .optional()
-    .default([]),
+  // Preferred store (for email routing)
+  preferredStore: z.enum(LOCATIONS_ENUM).optional(),
+
+  // Preferences (kept for DB compatibility but no longer collected in form)
+  preferredLocations: z.array(z.string()).optional().default([]),
+  areasOfInterest: z.array(z.string()).optional().default([]),
   availability: z.array(availabilityItemSchema).optional().default([]),
 
   // Medical / accessibility
@@ -113,10 +112,6 @@ export const profileUpdateSchema = z.object({
   emergencyName: z.string().optional(),
   emergencyPhone: z.string().optional(),
   emergencyRelation: z.string().optional(),
-
-  // Preferences
-  preferredLocations: z.array(z.enum(LOCATIONS_ENUM)).optional(),
-  areasOfInterest: z.array(z.enum(AREAS_ENUM)).optional(),
 
   // Medical / accessibility
   medicalNotes: z.string().optional(),

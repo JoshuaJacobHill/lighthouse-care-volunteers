@@ -9,6 +9,7 @@ import { VolunteerTabs } from '@/components/admin/VolunteerTabs'
 import { ChangeStatusModal } from '@/components/admin/ChangeStatusModal'
 import { AddNoteModal } from '@/components/admin/AddNoteModal'
 import { SendEmailModal } from '@/components/admin/SendEmailModal'
+import { OnboardingForm } from '@/components/admin/OnboardingForm'
 import { formatDate, formatDateTime, formatDuration } from '@/lib/utils'
 import { VOLUNTEER_STATUSES, SHIFT_ASSIGNMENT_STATUSES } from '@/lib/constants'
 import type { DayOfWeek, TimePeriod } from '@/components/volunteer/AvailabilityGrid'
@@ -114,16 +115,8 @@ export default async function VolunteerProfilePage({
 
       <section className="space-y-3">
         <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-          Preferences
+          Blue Card
         </h3>
-        <InfoRow
-          label="Locations"
-          value={volunteer.preferredLocations.join(', ') || undefined}
-        />
-        <InfoRow
-          label="Areas of Interest"
-          value={volunteer.areasOfInterest.join(', ') || undefined}
-        />
         <InfoRow label="Blue Card Status" value={volunteer.blueCardStatus} />
         {volunteer.blueCardNumber && (
           <InfoRow label="Blue Card Number" value={volunteer.blueCardNumber} />
@@ -132,6 +125,12 @@ export default async function VolunteerProfilePage({
           <InfoRow
             label="Blue Card Expiry"
             value={formatDate(volunteer.blueCardExpiry)}
+          />
+        )}
+        {volunteer.preferredLocations.length > 0 && (
+          <InfoRow
+            label="Preferred Store"
+            value={volunteer.preferredLocations.join(', ')}
           />
         )}
       </section>
@@ -271,6 +270,18 @@ export default async function VolunteerProfilePage({
     </div>
   )
 
+  // Parse inductionAnswers from JSON field
+  const inductionAnswers = (volunteer.inductionAnswers && typeof volunteer.inductionAnswers === 'object' && !Array.isArray(volunteer.inductionAnswers))
+    ? volunteer.inductionAnswers as Record<string, string>
+    : {}
+
+  const onboardingTab = (
+    <OnboardingForm
+      volunteerId={volunteer.id}
+      initialAnswers={inductionAnswers}
+    />
+  )
+
   const emailsTab = (
     volunteer.emailLogs.length === 0 ? (
       <EmptyState message="No emails have been sent to this volunteer." />
@@ -398,6 +409,7 @@ export default async function VolunteerProfilePage({
             { id: 'attendance', label: 'Attendance', content: attendanceTab },
             { id: 'notes', label: `Notes (${volunteer.adminNotes.length})`, content: notesTab },
             { id: 'emails', label: 'Emails', content: emailsTab },
+            { id: 'onboarding', label: 'Onboarding', content: onboardingTab },
           ]}
         />
       </div>

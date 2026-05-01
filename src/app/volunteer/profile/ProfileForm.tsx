@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { LOCATIONS, AREAS_OF_INTEREST, AUSTRALIAN_STATES } from '@/lib/constants'
+import { AUSTRALIAN_STATES } from '@/lib/constants'
 import { Loader2 } from 'lucide-react'
 
 interface VolunteerProfileData {
@@ -31,8 +31,6 @@ interface VolunteerProfileData {
   blueCardStatus: string
   blueCardNumber: string | null
   blueCardExpiry: Date | null
-  preferredLocations: string[]
-  areasOfInterest: string[]
   consentEmailUpdates: boolean
   consentSmsUpdates: boolean
 }
@@ -72,17 +70,10 @@ export default function ProfileForm({ volunteer }: ProfileFormProps) {
   const [blueCardNumber, setBlueCardNumber] = React.useState(volunteer.blueCardNumber ?? '')
   const [blueCardExpiry, setBlueCardExpiry] = React.useState(toDateInputValue(volunteer.blueCardExpiry))
 
-  const [preferredLocations, setPreferredLocations] = React.useState<string[]>(volunteer.preferredLocations)
-  const [areasOfInterest, setAreasOfInterest] = React.useState<string[]>(volunteer.areasOfInterest)
-
   const [consentEmailUpdates, setConsentEmailUpdates] = React.useState(volunteer.consentEmailUpdates)
   const [consentSmsUpdates, setConsentSmsUpdates] = React.useState(volunteer.consentSmsUpdates)
 
   const [fieldErrors, setFieldErrors] = React.useState<Record<string, string>>({})
-
-  function toggleStringArray(arr: string[], value: string): string[] {
-    return arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value]
-  }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -404,50 +395,6 @@ export default function ProfileForm({ volunteer }: ProfileFormProps) {
               </div>
             </div>
           )}
-        </CardContent>
-      </Card>
-
-      {/* Preferences */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Volunteering Preferences</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-5">
-          <fieldset>
-            <legend className="block text-sm font-medium text-gray-700 mb-2">Preferred locations</legend>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {LOCATIONS.map((loc) => (
-                <label key={loc} className="flex items-center gap-2 cursor-pointer">
-                  <Checkbox
-                    id={`loc-${loc}`}
-                    checked={preferredLocations.includes(loc)}
-                    onCheckedChange={() =>
-                      setPreferredLocations((prev) => toggleStringArray(prev, loc))
-                    }
-                  />
-                  <span className="text-sm text-gray-700">{loc}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-
-          <fieldset>
-            <legend className="block text-sm font-medium text-gray-700 mb-2">Areas of interest</legend>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {AREAS_OF_INTEREST.map((area) => (
-                <label key={area} className="flex items-center gap-2 cursor-pointer">
-                  <Checkbox
-                    id={`area-${area}`}
-                    checked={areasOfInterest.includes(area)}
-                    onCheckedChange={() =>
-                      setAreasOfInterest((prev) => toggleStringArray(prev, area))
-                    }
-                  />
-                  <span className="text-sm text-gray-700">{area}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
         </CardContent>
       </Card>
 

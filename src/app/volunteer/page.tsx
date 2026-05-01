@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma'
 import Link from 'next/link'
 import { StatusBadge } from '@/components/volunteer/StatusBadge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Clock, Calendar, User, MessageSquare, AlertTriangle, CheckCircle2, ChevronRight } from 'lucide-react'
+import { Clock, Calendar, User, MessageSquare, AlertTriangle, CheckCircle2, ChevronRight, CalendarPlus } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
@@ -103,6 +103,12 @@ export default async function VolunteerDashboard() {
 
   const quickActions = [
     {
+      href: '/volunteer/roster',
+      icon: CalendarPlus,
+      label: 'Book a Shift',
+      description: 'Browse and book available shifts',
+    },
+    {
       href: '/volunteer/availability',
       icon: Clock,
       label: 'Update Availability',
@@ -119,12 +125,6 @@ export default async function VolunteerDashboard() {
       icon: MessageSquare,
       label: 'Contact Admin',
       description: 'Send a message to our team',
-    },
-    {
-      href: '/volunteer/attendance',
-      icon: Calendar,
-      label: 'View Attendance',
-      description: 'See your volunteering history',
     },
   ]
 

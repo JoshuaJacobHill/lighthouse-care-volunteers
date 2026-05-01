@@ -150,7 +150,8 @@ model VolunteerProfile {
   consentSmsUpdates   Boolean   @default(false)
   agreedAt            DateTime?
 
-  avatarUrl String?
+  avatarUrl        String?
+  inductionAnswers Json?
 
   user              User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
   availability      VolunteerAvailability[]

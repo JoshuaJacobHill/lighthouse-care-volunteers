@@ -38,6 +38,14 @@ export default async function AvailabilityPage() {
           Let us know which days and times generally work for you. We&apos;ll use this to find shifts that suit you best.
         </p>
       </div>
+      <div className="mb-4 bg-orange-50 border border-orange-200 rounded-lg p-3 text-sm text-orange-800">
+        <p className="font-semibold mb-1">Our trading hours:</p>
+        <ul className="space-y-0.5 list-none">
+          <li>Loganholme Store: Mon–Fri 9am–5pm, Sat 9am–4pm</li>
+          <li>Hillcrest Store: Mon–Fri 9am–5pm, Sat 9am–12pm</li>
+          <li>We are closed Sundays</li>
+        </ul>
+      </div>
       <AvailabilityEditorClient initialAvailability={initialAvailability} />
     </div>
   )

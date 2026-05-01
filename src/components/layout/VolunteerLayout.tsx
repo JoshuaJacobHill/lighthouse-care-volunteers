@@ -2,8 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { signOut, useSession } from 'next-auth/react'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   LayoutDashboard,
   User,
@@ -27,23 +26,27 @@ const navItems: NavItem[] = [
   { href: '/volunteer/profile', label: 'My Profile', icon: User },
   { href: '/volunteer/availability', label: 'My Availability', icon: Clock },
   { href: '/volunteer/shifts', label: 'My Shifts', icon: Calendar },
+  { href: '/volunteer/roster', label: 'Book a Shift', icon: Calendar },
 ]
 
 interface VolunteerLayoutProps {
   children: React.ReactNode
+  userName: string
+  userId: string
 }
 
-export function VolunteerLayout({ children }: VolunteerLayoutProps) {
+export function VolunteerLayout({ children, userName, userId: _userId }: VolunteerLayoutProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const [mobileOpen, setMobileOpen] = React.useState(false)
-  const { data: session } = useSession()
 
-  const userName = session?.user?.name ?? 'Volunteer'
+  const displayName = userName || 'Volunteer'
 
   const isActive = (href: string) => pathname.startsWith(href)
 
-  const handleSignOut = () => {
-    signOut({ callbackUrl: '/auth/signin' })
+  const handleSignOut = async () => {
+    await fetch('/api/auth/signout', { method: 'POST' })
+    router.push('/login')
   }
 
   // Close mobile nav on route change
@@ -85,9 +88,9 @@ export function VolunteerLayout({ children }: VolunteerLayoutProps) {
         {/* User info */}
         <div className="border-b border-gray-200 p-4">
           <div className="flex items-center gap-3">
-            <Avatar name={userName} size="md" />
+            <Avatar name={displayName} size="md" />
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-gray-900 truncate">{userName}</p>
+              <p className="text-sm font-semibold text-gray-900 truncate">{displayName}</p>
               <p className="text-xs text-gray-500">Volunteer</p>
             </div>
           </div>
@@ -115,8 +118,8 @@ export function VolunteerLayout({ children }: VolunteerLayoutProps) {
         {/* Mobile top bar */}
         <header className="flex h-14 items-center justify-between border-b border-gray-200 bg-white px-4 lg:hidden shadow-sm">
           <div className="flex items-center gap-3">
-            <Avatar name={userName} size="sm" />
-            <span className="text-sm font-semibold text-gray-900">{userName}</span>
+            <Avatar name={displayName} size="sm" />
+            <span className="text-sm font-semibold text-gray-900">{displayName}</span>
           </div>
           <button
             type="button"

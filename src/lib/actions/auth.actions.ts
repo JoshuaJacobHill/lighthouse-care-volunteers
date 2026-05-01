@@ -242,7 +242,7 @@ export async function registerVolunteerAction(formData: FormData): Promise<{
         volunteerId: user.volunteerProfile?.id,
       })
 
-      // Notify admin of new volunteer
+      // Notify admin of new volunteer — always send to main admin email
       const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL
       if (adminEmail) {
         const adminTemplate = await renderTemplate('ADMIN_NEW_VOLUNTEER', {
@@ -257,6 +257,18 @@ export async function registerVolunteerAction(formData: FormData): Promise<{
           text: adminTemplate.text,
           templateType: 'ADMIN_NEW_VOLUNTEER',
         })
+
+        // Also notify Hillcrest if that's their preferred store
+        const preferredStore = formData.get('preferredStore') as string | null
+        if (preferredStore === 'Hillcrest') {
+          await sendEmail({
+            to: 'hillcrest@lighthousecare.org.au',
+            subject: adminTemplate.subject,
+            html: adminTemplate.html,
+            text: adminTemplate.text,
+            templateType: 'ADMIN_NEW_VOLUNTEER',
+          })
+        }
       }
     } catch (emailErr) {
       console.error('[registerVolunteerAction] email error:', emailErr)

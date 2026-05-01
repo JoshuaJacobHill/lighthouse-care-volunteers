@@ -11,7 +11,6 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { registerVolunteerAction } from '@/lib/actions/auth.actions'
 import {
   LOCATIONS,
-  AREAS_OF_INTEREST,
   DAYS_OF_WEEK,
   TIME_PERIODS,
   AUSTRALIAN_STATES,
@@ -31,6 +30,7 @@ type FormData = {
   suburb: string
   state: string
   postcode: string
+  preferredStore: string
   // Step 2
   emergencyName: string
   emergencyPhone: string
@@ -41,8 +41,6 @@ type FormData = {
   blueCardNumber: string
   blueCardExpiry: string
   // Step 3
-  preferredLocations: string[]
-  areasOfInterest: string[]
   availability: { day: string; period: string }[]
   notes: string
   // Account
@@ -67,6 +65,7 @@ const INITIAL_FORM: FormData = {
   suburb: '',
   state: 'QLD',
   postcode: '',
+  preferredStore: '',
   emergencyName: '',
   emergencyPhone: '',
   emergencyRelation: '',
@@ -75,8 +74,6 @@ const INITIAL_FORM: FormData = {
   blueCardStatus: 'Not Applicable',
   blueCardNumber: '',
   blueCardExpiry: '',
-  preferredLocations: [],
-  areasOfInterest: [],
   availability: [],
   notes: '',
   password: '',
@@ -91,17 +88,13 @@ const INITIAL_FORM: FormData = {
 const STEP_TITLES = [
   'Personal Details',
   'Emergency & Health',
-  'Volunteering Preferences',
+  'Availability & Notes',
   'Agreements & Account',
 ]
 
 const BLUE_CARD_OPTIONS = ['Not Applicable', 'Pending', 'Current', 'Expired']
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function toggleArrayItem(arr: string[], item: string): string[] {
-  return arr.includes(item) ? arr.filter((v) => v !== item) : [...arr, item]
-}
 
 function toggleAvailability(
   current: { day: string; period: string }[],
@@ -172,6 +165,29 @@ function Step1({
         error={errors.dateOfBirth}
         autoComplete="bday"
       />
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Which store would you prefer to volunteer at? *
+        </label>
+        <select
+          className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+          value={data.preferredStore}
+          onChange={(e) => onChange({ preferredStore: e.target.value })}
+          required
+        >
+          <option value="">Select a store…</option>
+          {LOCATIONS.map((loc) => (
+            <option key={loc} value={loc}>
+              {loc}
+            </option>
+          ))}
+        </select>
+        {errors.preferredStore && (
+          <p className="mt-1 text-xs text-red-600">{errors.preferredStore}</p>
+        )}
+      </div>
+
       <hr className="border-gray-200" />
       <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Home address (optional)</h3>
       <Input
@@ -339,47 +355,15 @@ function Step3({
 }) {
   return (
     <div className="space-y-6">
-      {/* Preferred locations */}
-      <div>
-        <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">
-          Preferred locations
-        </h3>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {LOCATIONS.map((loc) => (
-            <Checkbox
-              key={loc}
-              label={loc}
-              checked={data.preferredLocations.includes(loc)}
-              onCheckedChange={() =>
-                onChange({ preferredLocations: toggleArrayItem(data.preferredLocations, loc) })
-              }
-            />
-          ))}
-        </div>
+      {/* Trading hours info box */}
+      <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 text-sm text-orange-800">
+        <p className="font-semibold mb-1">Our trading hours:</p>
+        <ul className="space-y-0.5 list-none">
+          <li>Loganholme Store: Mon–Fri 9am–5pm, Sat 9am–4pm</li>
+          <li>Hillcrest Store: Mon–Fri 9am–5pm, Sat 9am–12pm</li>
+          <li>We are closed Sundays</li>
+        </ul>
       </div>
-
-      <hr className="border-gray-200" />
-
-      {/* Areas of interest */}
-      <div>
-        <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">
-          Areas of interest
-        </h3>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {AREAS_OF_INTEREST.map((area) => (
-            <Checkbox
-              key={area}
-              label={area}
-              checked={data.areasOfInterest.includes(area)}
-              onCheckedChange={() =>
-                onChange({ areasOfInterest: toggleArrayItem(data.areasOfInterest, area) })
-              }
-            />
-          ))}
-        </div>
-      </div>
-
-      <hr className="border-gray-200" />
 
       {/* Availability grid */}
       <div>
@@ -442,7 +426,7 @@ function Step3({
         <textarea
           className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"
           rows={3}
-          placeholder="Anything else you'd like us to know about your volunteering preferences..."
+          placeholder="Anything else you'd like us to know..."
           value={data.notes}
           onChange={(e) => onChange({ notes: e.target.value })}
         />
@@ -599,6 +583,7 @@ export default function SignupPage() {
       if (!formData.mobile.trim()) errs.mobile = 'Mobile number is required'
       else if (!/^(\+61|0)[4-5]\d{8}$/.test(formData.mobile.replace(/\s/g, '')))
         errs.mobile = 'Please enter a valid Australian mobile number'
+      if (!formData.preferredStore) errs.preferredStore = 'Please select your preferred store'
       if (formData.postcode && !/^\d{4}$/.test(formData.postcode))
         errs.postcode = 'Postcode must be 4 digits'
     }
@@ -653,13 +638,15 @@ export default function SignupPage() {
       if (formData.suburb) fd.append('suburb', formData.suburb)
       if (formData.state) fd.append('state', formData.state)
       if (formData.postcode) fd.append('postcode', formData.postcode)
+      if (formData.preferredStore) fd.append('preferredStore', formData.preferredStore)
       fd.append('emergencyName', formData.emergencyName)
       fd.append('emergencyPhone', formData.emergencyPhone)
       if (formData.emergencyRelation) fd.append('emergencyRelation', formData.emergencyRelation)
       if (formData.medicalNotes) fd.append('medicalNotes', formData.medicalNotes)
       if (formData.accessibilityNeeds) fd.append('accessibilityNeeds', formData.accessibilityNeeds)
-      fd.append('preferredLocations', JSON.stringify(formData.preferredLocations))
-      fd.append('areasOfInterest', JSON.stringify(formData.areasOfInterest))
+      // Store preferredStore as the preferred location array for DB compatibility
+      fd.append('preferredLocations', JSON.stringify(formData.preferredStore ? [formData.preferredStore] : []))
+      fd.append('areasOfInterest', JSON.stringify([]))
       // Map availability to what the server action expects: dayOfWeek + timePeriod
       const mappedAvailability = formData.availability.map((a) => ({
         dayOfWeek: a.day,

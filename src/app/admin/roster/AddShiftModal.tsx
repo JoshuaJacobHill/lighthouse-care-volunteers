@@ -57,7 +57,7 @@ export function AddShiftModal({ locations, departments, weekStart }: AddShiftMod
     locationId: locations[0]?.id ?? '',
     departmentId: '',
     title: '',
-    capacity: 2,
+    capacity: 5,
     notes: '',
   })
 

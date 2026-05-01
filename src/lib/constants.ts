@@ -4,20 +4,6 @@ export const ORG_NAME = 'Lighthouse Care'
 export const LOCATIONS = [
   'Loganholme',
   'Hillcrest',
-  'Warehouse',
-  'Events',
-  'Other',
-] as const
-
-export const AREAS_OF_INTEREST = [
-  'Packing Orders',
-  'Warehouse',
-  'Grocery Store',
-  'Deliveries',
-  'Events',
-  'Admin',
-  'Cleaning',
-  'Other',
 ] as const
 
 export const DAYS_OF_WEEK = [
@@ -80,7 +66,6 @@ export const AUSTRALIAN_STATES = [
 ] as const
 
 export type Location = (typeof LOCATIONS)[number]
-export type AreaOfInterest = (typeof AREAS_OF_INTEREST)[number]
 export type DayOfWeek = (typeof DAYS_OF_WEEK)[number]
 export type TimePeriod = (typeof TIME_PERIODS)[number]
 export type VolunteerStatusKey = keyof typeof VOLUNTEER_STATUSES
