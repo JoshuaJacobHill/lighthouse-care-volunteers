@@ -15,7 +15,7 @@ const badgeVariants = cva(
         PAUSED: 'bg-orange-100 text-orange-800 border border-orange-200',
         REMOVED: 'bg-red-100 text-red-800 border border-red-200',
         // Generic UI variants
-        default: 'bg-teal-100 text-teal-800 border border-teal-200',
+        default: 'bg-orange-100 text-orange-700 border border-orange-200',
         secondary: 'bg-amber-100 text-amber-800 border border-amber-200',
         outline: 'border border-gray-300 text-gray-700 bg-transparent',
       },

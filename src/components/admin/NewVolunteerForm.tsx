@@ -101,7 +101,7 @@ export function NewVolunteerForm() {
             <label className="text-sm font-medium text-gray-700 block mb-1">State</label>
             <select
               name="state"
-              className="block w-full rounded-md border border-gray-300 py-2 px-3 text-sm text-gray-900 shadow-sm focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600"
+              className="block w-full rounded-md border border-gray-300 py-2 px-3 text-sm text-gray-900 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
               <option value="">Select state…</option>
               {AUSTRALIAN_STATES.map((s) => (
@@ -137,8 +137,8 @@ export function NewVolunteerForm() {
                 onClick={() => toggleMulti(loc, selectedLocations, setSelectedLocations)}
                 className={`rounded-full border px-3 py-1 text-sm transition-colors ${
                   selectedLocations.includes(loc)
-                    ? 'border-teal-600 bg-teal-600 text-white'
-                    : 'border-gray-300 bg-white text-gray-700 hover:border-teal-400 hover:bg-teal-50'
+                    ? 'border-orange-500 bg-orange-500 text-white'
+                    : 'border-gray-300 bg-white text-gray-700 hover:border-orange-400 hover:bg-orange-50'
                 }`}
               >
                 {loc}
@@ -157,8 +157,8 @@ export function NewVolunteerForm() {
                 onClick={() => toggleMulti(area, selectedAreas, setSelectedAreas)}
                 className={`rounded-full border px-3 py-1 text-sm transition-colors ${
                   selectedAreas.includes(area)
-                    ? 'border-teal-600 bg-teal-600 text-white'
-                    : 'border-gray-300 bg-white text-gray-700 hover:border-teal-400 hover:bg-teal-50'
+                    ? 'border-orange-500 bg-orange-500 text-white'
+                    : 'border-gray-300 bg-white text-gray-700 hover:border-orange-400 hover:bg-orange-50'
                 }`}
               >
                 {area}
@@ -179,7 +179,7 @@ export function NewVolunteerForm() {
             <select
               name="status"
               defaultValue="PENDING_INDUCTION"
-              className="block w-full rounded-md border border-gray-300 py-2 px-3 text-sm text-gray-900 shadow-sm focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600"
+              className="block w-full rounded-md border border-gray-300 py-2 px-3 text-sm text-gray-900 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
               {(Object.entries(VOLUNTEER_STATUSES) as [string, string][]).map(([key, label]) => (
                 <option key={key} value={key}>{label}</option>

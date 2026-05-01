@@ -163,7 +163,7 @@ export default async function VolunteersPage({
                     <td className="px-4 py-3 text-right">
                       <Link
                         href={`/admin/volunteers/${v.id}`}
-                        className="inline-flex items-center rounded-md border border-gray-300 bg-white px-2.5 py-1 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-600"
+                        className="inline-flex items-center rounded-md border border-gray-300 bg-white px-2.5 py-1 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500"
                       >
                         View
                       </Link>

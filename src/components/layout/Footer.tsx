@@ -5,7 +5,7 @@ import { MapPin, Phone, Mail } from 'lucide-react'
 const footerLinks = [
   { href: '/privacy', label: 'Privacy Policy' },
   { href: '/volunteer/register', label: 'Become a Volunteer' },
-  { href: '/auth/signin', label: 'Volunteer Sign In' },
+  { href: '/login', label: 'Volunteer Sign In' },
 ]
 
 export function Footer() {
@@ -34,11 +34,11 @@ export function Footer() {
             </h3>
             <ul className="space-y-2 text-sm">
               <li className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-teal-500" aria-hidden="true" />
+                <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-orange-400" aria-hidden="true" />
                 <span>Logan, South East Queensland</span>
               </li>
               <li className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-teal-500" aria-hidden="true" />
+                <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-orange-400" aria-hidden="true" />
                 <span>
                   Stores at Loganholme &amp; Hillcrest
                 </span>
@@ -56,7 +56,7 @@ export function Footer() {
                 <li key={href}>
                   <Link
                     href={href}
-                    className="hover:text-teal-400 transition-colors"
+                    className="hover:text-orange-400 transition-colors"
                   >
                     {label}
                   </Link>

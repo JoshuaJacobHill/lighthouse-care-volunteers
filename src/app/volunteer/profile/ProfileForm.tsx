@@ -245,7 +245,7 @@ export default function ProfileForm({ volunteer }: ProfileFormProps) {
                     id="state"
                     value={state}
                     onChange={(e) => setState(e.target.value)}
-                    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600"
+                    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     aria-label="State"
                   >
                     {AUSTRALIAN_STATES.map((s) => (
@@ -366,7 +366,7 @@ export default function ProfileForm({ volunteer }: ProfileFormProps) {
                     value={status}
                     checked={blueCardStatus === status}
                     onChange={() => setBlueCardStatus(status)}
-                    className="h-4 w-4 text-teal-600 border-gray-300 focus:ring-teal-600"
+                    className="h-4 w-4 text-orange-500 border-gray-300 focus:ring-orange-500"
                   />
                   <span className="text-sm text-gray-700">
                     {status === 'NOT_APPLICABLE' ? 'Not applicable' :

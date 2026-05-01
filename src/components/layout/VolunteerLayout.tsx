@@ -64,8 +64,8 @@ export function VolunteerLayout({ children }: VolunteerLayoutProps) {
                 className={clsx(
                   'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                   active
-                    ? 'bg-teal-600 text-white shadow-sm'
-                    : 'text-gray-600 hover:bg-teal-50 hover:text-teal-700'
+                    ? 'bg-orange-500 text-white shadow-sm'
+                    : 'text-gray-600 hover:bg-orange-50 hover:text-orange-600'
                 )}
               >
                 <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
@@ -121,7 +121,7 @@ export function VolunteerLayout({ children }: VolunteerLayoutProps) {
           <button
             type="button"
             onClick={() => setMobileOpen((o) => !o)}
-            className="rounded-md p-2 text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-600"
+            className="rounded-md p-2 text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileOpen}
           >

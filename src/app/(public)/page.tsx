@@ -120,21 +120,21 @@ export default function PublicHomePage() {
   return (
     <div className="flex flex-col">
       {/* ── Hero ─────────────────────────────────────────────────────────────── */}
-      <section className="bg-gradient-to-br from-teal-600 to-teal-800 py-24 px-4 text-white">
+      <section className="bg-gradient-to-br from-orange-500 to-orange-700 py-24 px-4 text-white">
         <div className="mx-auto max-w-4xl text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-teal-100">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-orange-100">
             <Heart className="h-4 w-4" aria-hidden="true" />
             Volunteers needed across South East Queensland
           </div>
           <h1 className="mt-4 text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
             Make a Difference<br className="hidden sm:block" /> in Logan
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-teal-100 sm:text-xl">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-orange-100 sm:text-xl">
             Join the Lighthouse Care volunteer family and help us provide affordable food to families across South East Queensland.
           </p>
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link href="/signup">
-              <Button size="lg" className="bg-white text-teal-700 hover:bg-teal-50 focus-visible:ring-white w-full sm:w-auto">
+              <Button size="lg" className="bg-white text-orange-600 hover:bg-orange-50 focus-visible:ring-white w-full sm:w-auto">
                 Sign Up to Volunteer
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>
@@ -152,13 +152,13 @@ export default function PublicHomePage() {
       </section>
 
       {/* ── Impact stats ──────────────────────────────────────────────────────── */}
-      <section className="bg-teal-700 py-10 px-4">
+      <section className="bg-orange-600 py-10 px-4">
         <div className="mx-auto max-w-5xl">
           <dl className="grid grid-cols-2 gap-6 sm:grid-cols-4">
             {stats.map(({ value, label }) => (
               <div key={label} className="text-center">
                 <dt className="text-3xl font-bold text-white sm:text-4xl">{value}</dt>
-                <dd className="mt-1 text-sm text-teal-200">{label}</dd>
+                <dd className="mt-1 text-sm text-orange-200">{label}</dd>
               </div>
             ))}
           </dl>
@@ -186,25 +186,25 @@ export default function PublicHomePage() {
               </p>
               <div className="mt-6 flex flex-col gap-2 text-sm text-gray-500">
                 <span className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-teal-600 shrink-0" aria-hidden="true" />
+                  <CheckCircle className="h-4 w-4 text-orange-500 shrink-0" aria-hidden="true" />
                   ACNC Registered Charity
                 </span>
                 <span className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-teal-600 shrink-0" aria-hidden="true" />
+                  <CheckCircle className="h-4 w-4 text-orange-500 shrink-0" aria-hidden="true" />
                   ABN 87 637 110 948
                 </span>
                 <span className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-teal-600 shrink-0" aria-hidden="true" />
+                  <MapPin className="h-4 w-4 text-orange-500 shrink-0" aria-hidden="true" />
                   Logan, South East Queensland
                 </span>
               </div>
             </div>
-            <div className="rounded-2xl bg-teal-50 p-8 border border-teal-100">
-              <blockquote className="text-lg font-medium text-teal-800 leading-relaxed italic">
+            <div className="rounded-2xl bg-orange-50 p-8 border border-orange-100">
+              <blockquote className="text-lg font-medium text-orange-700 leading-relaxed italic">
                 &ldquo;Making lives better so that together we can make the world better.&rdquo;
               </blockquote>
-              <p className="mt-4 text-sm text-teal-600 font-medium">— Our mission</p>
-              <div className="mt-6 border-t border-teal-200 pt-6 text-sm text-teal-700">
+              <p className="mt-4 text-sm text-orange-500 font-medium">— Our mission</p>
+              <div className="mt-6 border-t border-orange-200 pt-6 text-sm text-orange-600">
                 <p>
                   Our culture is built on <strong>People, Empowering, Generosity, Integrity, Hope,</strong> and{' '}
                   <strong>Collaboration</strong> — and that spirit flows through everything our volunteers do.
@@ -231,7 +231,7 @@ export default function PublicHomePage() {
                 key={title}
                 className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow"
               >
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
+                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
                   <Icon className="h-6 w-6" aria-hidden="true" />
                 </div>
                 <h3 className="font-semibold text-gray-900">{title}</h3>
@@ -254,7 +254,7 @@ export default function PublicHomePage() {
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             {steps.map(({ number, title, description }) => (
               <div key={number} className="relative text-center">
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-teal-600 text-xl font-bold text-white shadow-md">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-orange-500 text-xl font-bold text-white shadow-md">
                   {number}
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
@@ -288,11 +288,11 @@ export default function PublicHomePage() {
                 key={name}
                 className="rounded-xl bg-white border border-gray-200 p-6 shadow-sm"
               >
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
+                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
                   <Icon className="h-6 w-6" aria-hidden="true" />
                 </div>
                 <h3 className="font-semibold text-gray-900">{name}</h3>
-                <p className="mt-1 flex items-center gap-1.5 text-xs text-teal-600 font-medium">
+                <p className="mt-1 flex items-center gap-1.5 text-xs text-orange-500 font-medium">
                   <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
                   {suburb}
                 </p>
@@ -304,17 +304,17 @@ export default function PublicHomePage() {
       </section>
 
       {/* ── Bottom CTA ────────────────────────────────────────────────────────── */}
-      <section className="bg-gradient-to-br from-teal-600 to-teal-800 py-20 px-4 text-white">
+      <section className="bg-gradient-to-br from-orange-500 to-orange-700 py-20 px-4 text-white">
         <div className="mx-auto max-w-2xl text-center">
-          <Users className="mx-auto mb-4 h-12 w-12 text-teal-200" aria-hidden="true" />
+          <Users className="mx-auto mb-4 h-12 w-12 text-orange-200" aria-hidden="true" />
           <h2 className="text-3xl font-bold">Ready to join our volunteer family?</h2>
-          <p className="mx-auto mt-4 max-w-lg text-lg text-teal-100 leading-relaxed">
+          <p className="mx-auto mt-4 max-w-lg text-lg text-orange-100 leading-relaxed">
             It only takes a few minutes to sign up. Your time and energy can make a real, practical difference
             to families doing it tough across South East Queensland.
           </p>
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link href="/signup">
-              <Button size="lg" className="bg-white text-teal-700 hover:bg-teal-50 focus-visible:ring-white w-full sm:w-auto">
+              <Button size="lg" className="bg-white text-orange-600 hover:bg-orange-50 focus-visible:ring-white w-full sm:w-auto">
                 Sign Up to Volunteer
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>

@@ -84,7 +84,7 @@ export default function ContactPage() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
-            <MessageSquare className="h-5 w-5 text-teal-600" aria-hidden="true" />
+            <MessageSquare className="h-5 w-5 text-orange-500" aria-hidden="true" />
             Send a Message
           </CardTitle>
         </CardHeader>

@@ -194,7 +194,7 @@ export default async function VolunteerProfilePage({
     <div className="space-y-4">
       <p className="text-sm font-medium text-gray-700">
         Total volunteer hours:{' '}
-        <span className="font-bold text-teal-700">{formatDuration(totalMins)}</span>
+        <span className="font-bold text-orange-600">{formatDuration(totalMins)}</span>
       </p>
       {volunteer.attendanceRecords.length === 0 ? (
         <EmptyState message="No attendance records found." />
@@ -362,7 +362,7 @@ export default async function VolunteerProfilePage({
                 </div>
                 <div className="h-2 w-full rounded-full bg-gray-100">
                   <div
-                    className="h-2 rounded-full bg-teal-600 transition-all"
+                    className="h-2 rounded-full bg-orange-500 transition-all"
                     style={{ width: `${Math.round((completedSections / totalSections) * 100)}%` }}
                   />
                 </div>
@@ -374,7 +374,7 @@ export default async function VolunteerProfilePage({
           <div className="flex flex-wrap gap-2">
             <Link
               href={`/admin/volunteers/${volunteer.id}/edit`}
-              className="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-600"
+              className="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
               Edit Profile
             </Link>
@@ -432,7 +432,7 @@ function ShiftStatusBadge({ status }: { status: string }) {
     SCHEDULED: 'bg-blue-100 text-blue-800',
     CONFIRMED: 'bg-green-100 text-green-800',
     CANCELLED_BY_VOLUNTEER: 'bg-gray-100 text-gray-700',
-    ATTENDED: 'bg-teal-100 text-teal-800',
+    ATTENDED: 'bg-orange-100 text-orange-700',
     NO_SHOW: 'bg-red-100 text-red-800',
     ADMIN_CANCELLED: 'bg-orange-100 text-orange-800',
   }

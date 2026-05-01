@@ -33,7 +33,7 @@ const SHIFT_STATUS_COLOURS: Record<string, string> = {
   SCHEDULED: 'bg-blue-100 text-blue-800 border border-blue-200',
   CONFIRMED: 'bg-green-100 text-green-800 border border-green-200',
   CANCELLED_BY_VOLUNTEER: 'bg-gray-100 text-gray-600 border border-gray-200',
-  ATTENDED: 'bg-teal-100 text-teal-800 border border-teal-200',
+  ATTENDED: 'bg-orange-100 text-orange-700 border border-orange-200',
   NO_SHOW: 'bg-red-100 text-red-800 border border-red-200',
   ADMIN_CANCELLED: 'bg-gray-100 text-gray-600 border border-gray-200',
 }
@@ -152,7 +152,7 @@ function ShiftCard({ assignment, showCancel }: { assignment: ShiftData; showCanc
     <div className="flex flex-col sm:flex-row sm:items-center gap-3">
       <div className="flex-1 min-w-0">
         {assignment.shift.title && (
-          <p className="text-xs font-medium text-teal-700 uppercase tracking-wide mb-0.5">
+          <p className="text-xs font-medium text-orange-600 uppercase tracking-wide mb-0.5">
             {assignment.shift.title}
           </p>
         )}

@@ -26,7 +26,7 @@ export function Spinner({ size = 'md', label = 'Loading…', className, ...props
     >
       <span
         className={clsx(
-          'animate-spin rounded-full border-teal-200 border-t-teal-600',
+          'animate-spin rounded-full border-orange-200 border-t-orange-500',
           spinnerSizes[size]
         )}
       />

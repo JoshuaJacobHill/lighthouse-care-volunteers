@@ -56,7 +56,7 @@ const ModalContent = React.forwardRef<
     >
       {children}
       {!hideCloseButton && (
-        <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm p-1 text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2">
+        <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm p-1 text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>

@@ -12,7 +12,7 @@ export default function TermsPage() {
       <div className="mx-auto max-w-3xl">
         {/* Header */}
         <div className="mb-10 border-b border-gray-200 pb-8">
-          <p className="text-sm font-medium uppercase tracking-wide text-teal-600 mb-2">
+          <p className="text-sm font-medium uppercase tracking-wide text-orange-500 mb-2">
             Lighthouse Care
           </p>
           <h1 className="text-4xl font-bold text-gray-900">Volunteer Terms &amp; Conditions</h1>
@@ -246,13 +246,13 @@ export default function TermsPage() {
           </section>
 
           {/* Questions */}
-          <div className="rounded-xl bg-teal-50 border border-teal-100 p-6 text-sm text-teal-900">
+          <div className="rounded-xl bg-orange-50 border border-orange-100 p-6 text-sm text-orange-800">
             <p className="font-semibold text-base mb-2">Questions?</p>
             <p>
               If you have any questions about these terms, please speak with your volunteer coordinator
               or contact the Lighthouse Care team.
             </p>
-            <p className="mt-3 text-teal-700">
+            <p className="mt-3 text-orange-600">
               Lighthouse Care &mdash; Logan, South East Queensland &mdash; ABN 87 637 110 948
             </p>
           </div>
@@ -260,11 +260,11 @@ export default function TermsPage() {
           {/* Back to signup */}
           <p className="text-sm text-gray-500">
             Ready to join?{' '}
-            <Link href="/signup" className="text-teal-600 font-medium hover:underline">
+            <Link href="/signup" className="text-orange-500 font-medium hover:underline">
               Sign up as a volunteer
             </Link>
             {' '}or review our{' '}
-            <Link href="/privacy" className="text-teal-600 font-medium hover:underline">
+            <Link href="/privacy" className="text-orange-500 font-medium hover:underline">
               Privacy Policy
             </Link>
             .

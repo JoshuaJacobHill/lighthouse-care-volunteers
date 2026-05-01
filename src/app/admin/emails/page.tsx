@@ -51,7 +51,7 @@ export default async function EmailsPage() {
         </div>
         <Link
           href="/admin/emails/send"
-          className="flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 transition-colors whitespace-nowrap"
+          className="flex items-center gap-2 rounded-lg bg-orange-500 px-4 py-2 text-sm font-medium text-white hover:bg-orange-600 transition-colors whitespace-nowrap"
         >
           <Send className="h-4 w-4" />
           Send Email
@@ -85,7 +85,7 @@ export default async function EmailsPage() {
                   <div className="flex items-center gap-2.5">
                     <div
                       className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
-                        isActive ? 'bg-teal-100 text-teal-600' : 'bg-gray-100 text-gray-400'
+                        isActive ? 'bg-orange-100 text-orange-500' : 'bg-gray-100 text-gray-400'
                       }`}
                     >
                       <Mail className="h-4 w-4" />
@@ -129,7 +129,7 @@ export default async function EmailsPage() {
         </div>
       </div>
 
-      <div className="rounded-xl border border-teal-100 bg-teal-50 px-5 py-4 text-sm text-teal-700">
+      <div className="rounded-xl border border-orange-100 bg-orange-50 px-5 py-4 text-sm text-orange-600">
         <strong>Tip:</strong> Templates that haven&apos;t been customised yet use the built-in default
         content. Click <em>Edit</em> on any template to customise it and save it to the database.
       </div>

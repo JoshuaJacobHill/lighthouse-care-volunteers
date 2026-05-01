@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
@@ -8,13 +8,13 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-teal-600 text-white hover:bg-teal-700 focus-visible:ring-teal-600',
+          'bg-orange-500 text-white hover:bg-orange-600 focus-visible:ring-orange-500',
         secondary:
-          'bg-amber-600 text-white hover:bg-amber-700 focus-visible:ring-amber-600',
+          'bg-gray-900 text-white hover:bg-gray-800 focus-visible:ring-gray-900',
         outline:
-          'border border-teal-600 text-teal-600 bg-transparent hover:bg-teal-50 focus-visible:ring-teal-600',
+          'border border-orange-500 text-orange-500 bg-transparent hover:bg-orange-50 focus-visible:ring-orange-500',
         ghost:
-          'text-teal-600 bg-transparent hover:bg-teal-50 focus-visible:ring-teal-600',
+          'text-orange-500 bg-transparent hover:bg-orange-50 focus-visible:ring-orange-500',
         destructive:
           'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600',
       },
@@ -41,7 +41,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, ...props }, ref) => {
     return (
       <button
-        className={clsx(buttonVariants({ variant, size }), className)}
+        className={twMerge(buttonVariants({ variant, size }), className)}
         ref={ref}
         {...props}
       />

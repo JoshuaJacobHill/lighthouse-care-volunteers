@@ -67,7 +67,7 @@ export default async function EditTemplatePage({ params }: PageProps) {
       {/* Header */}
       <div>
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
-          <a href="/admin/emails" className="hover:text-teal-600 transition-colors">
+          <a href="/admin/emails" className="hover:text-orange-500 transition-colors">
             Email Templates
           </a>
           <span>/</span>

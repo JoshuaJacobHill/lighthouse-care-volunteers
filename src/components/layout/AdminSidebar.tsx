@@ -52,8 +52,8 @@ function SidebarLink({ item, isActive, collapsed }: SidebarLinkProps) {
       className={clsx(
         'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
         isActive
-          ? 'bg-teal-600 text-white shadow-sm'
-          : 'text-gray-600 hover:bg-teal-50 hover:text-teal-700',
+          ? 'bg-orange-500 text-white shadow-sm'
+          : 'text-gray-600 hover:bg-orange-50 hover:text-orange-600',
         collapsed && 'justify-center'
       )}
     >
@@ -82,12 +82,12 @@ export function AdminSidebar({ collapsed = false, onCollapsedChange }: AdminSide
       <div className={clsx('flex items-center border-b border-gray-200 px-4 py-4', collapsed ? 'justify-center' : 'gap-2')}>
         {!collapsed && (
           <div className="flex flex-col leading-none">
-            <span className="font-bold text-teal-700 text-sm">Lighthouse Care</span>
+            <span className="font-bold text-orange-600 text-sm">Lighthouse Care</span>
             <span className="text-xs text-gray-500">Admin</span>
           </div>
         )}
         {collapsed && (
-          <div className="h-8 w-8 rounded-md bg-teal-600 flex items-center justify-center" aria-hidden="true">
+          <div className="h-8 w-8 rounded-md bg-orange-500 flex items-center justify-center" aria-hidden="true">
             <span className="text-white font-bold text-xs">LC</span>
           </div>
         )}
@@ -144,7 +144,7 @@ export function AdminSidebar({ collapsed = false, onCollapsedChange }: AdminSide
         <button
           type="button"
           onClick={() => setMobileOpen(true)}
-          className="rounded-md bg-teal-600 p-2 text-white shadow-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500"
+          className="rounded-md bg-orange-500 p-2 text-white shadow-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
           aria-label="Open navigation"
         >
           <Menu className="h-5 w-5" />
@@ -164,13 +164,13 @@ export function AdminSidebar({ collapsed = false, onCollapsedChange }: AdminSide
           <aside className="relative z-50 flex w-64 flex-col bg-white shadow-xl">
             <div className="flex items-center justify-between border-b border-gray-200 px-4 py-4">
               <div className="flex flex-col leading-none">
-                <span className="font-bold text-teal-700 text-sm">Lighthouse Care</span>
+                <span className="font-bold text-orange-600 text-sm">Lighthouse Care</span>
                 <span className="text-xs text-gray-500">Admin</span>
               </div>
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
-                className="rounded-md p-1 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="rounded-md p-1 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 aria-label="Close navigation"
               >
                 <X className="h-5 w-5" />

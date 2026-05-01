@@ -75,7 +75,7 @@ function SectionCard({
 
   if (editing) {
     return (
-      <div className="bg-white border border-teal-300 rounded-lg p-5 shadow-sm">
+      <div className="bg-white border border-orange-300 rounded-lg p-5 shadow-sm">
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
@@ -83,7 +83,7 @@ function SectionCard({
               type="text"
               value={form.title}
               onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
           <div>
@@ -92,7 +92,7 @@ function SectionCard({
               value={form.content}
               onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
               rows={8}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 font-mono"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 font-mono"
             />
           </div>
           <div className="flex flex-wrap gap-6">
@@ -102,7 +102,7 @@ function SectionCard({
                 type="number"
                 value={form.sortOrder}
                 onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))}
-                className="w-24 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-24 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
             <div className="flex items-end gap-6">
@@ -111,7 +111,7 @@ function SectionCard({
                   type="checkbox"
                   checked={form.isRequired}
                   onChange={e => setForm(f => ({ ...f, isRequired: e.target.checked }))}
-                  className="w-4 h-4 accent-teal-600"
+                  className="w-4 h-4 accent-orange-500"
                 />
                 Required
               </label>
@@ -120,7 +120,7 @@ function SectionCard({
                   type="checkbox"
                   checked={form.isActive}
                   onChange={e => setForm(f => ({ ...f, isActive: e.target.checked }))}
-                  className="w-4 h-4 accent-teal-600"
+                  className="w-4 h-4 accent-orange-500"
                 />
                 Active
               </label>
@@ -131,7 +131,7 @@ function SectionCard({
             <button
               onClick={handleSave}
               disabled={isPending}
-              className="px-4 py-2 bg-teal-600 text-white text-sm rounded-md hover:bg-teal-700 disabled:opacity-50 transition-colors"
+              className="px-4 py-2 bg-orange-500 text-white text-sm rounded-md hover:bg-orange-600 disabled:opacity-50 transition-colors"
             >
               {isPending ? 'Saving…' : 'Save'}
             </button>
@@ -152,7 +152,7 @@ function SectionCard({
     <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-3 flex-1 min-w-0">
-          <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-teal-100 text-teal-700 text-xs font-bold flex-shrink-0 mt-0.5">
+          <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-orange-100 text-orange-600 text-xs font-bold flex-shrink-0 mt-0.5">
             {section.sortOrder}
           </span>
           <div className="flex-1 min-w-0">
@@ -205,7 +205,7 @@ function SectionCard({
           </button>
           <button
             onClick={() => setEditing(true)}
-            className="px-3 py-1.5 text-xs bg-teal-50 text-teal-700 rounded-md hover:bg-teal-100 transition-colors font-medium"
+            className="px-3 py-1.5 text-xs bg-orange-50 text-orange-600 rounded-md hover:bg-orange-100 transition-colors font-medium"
           >
             Edit
           </button>
@@ -265,8 +265,8 @@ function NewSectionCard({
   }
 
   return (
-    <div className="bg-white border-2 border-dashed border-teal-300 rounded-lg p-5">
-      <h3 className="text-sm font-semibold text-teal-700 mb-4">New Section</h3>
+    <div className="bg-white border-2 border-dashed border-orange-300 rounded-lg p-5">
+      <h3 className="text-sm font-semibold text-orange-600 mb-4">New Section</h3>
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
@@ -275,7 +275,7 @@ function NewSectionCard({
             value={form.title}
             onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
             placeholder="e.g. Welcome to Lighthouse Care"
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
         </div>
         <div>
@@ -285,7 +285,7 @@ function NewSectionCard({
             onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
             rows={8}
             placeholder="Write the induction content here…"
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 font-mono"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 font-mono"
           />
         </div>
         <div className="flex flex-wrap gap-6">
@@ -295,7 +295,7 @@ function NewSectionCard({
               type="number"
               value={form.sortOrder}
               onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))}
-              className="w-24 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-24 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
           <div className="flex items-end gap-6">
@@ -304,7 +304,7 @@ function NewSectionCard({
                 type="checkbox"
                 checked={form.isRequired}
                 onChange={e => setForm(f => ({ ...f, isRequired: e.target.checked }))}
-                className="w-4 h-4 accent-teal-600"
+                className="w-4 h-4 accent-orange-500"
               />
               Required
             </label>
@@ -313,7 +313,7 @@ function NewSectionCard({
                 type="checkbox"
                 checked={form.isActive}
                 onChange={e => setForm(f => ({ ...f, isActive: e.target.checked }))}
-                className="w-4 h-4 accent-teal-600"
+                className="w-4 h-4 accent-orange-500"
               />
               Active
             </label>
@@ -324,7 +324,7 @@ function NewSectionCard({
           <button
             onClick={handleSave}
             disabled={isPending}
-            className="px-4 py-2 bg-teal-600 text-white text-sm rounded-md hover:bg-teal-700 disabled:opacity-50 transition-colors"
+            className="px-4 py-2 bg-orange-500 text-white text-sm rounded-md hover:bg-orange-600 disabled:opacity-50 transition-colors"
           >
             {isPending ? 'Saving…' : 'Add Section'}
           </button>
@@ -434,7 +434,7 @@ export default function InductionSectionsManager({ sections: initial }: { sectio
         <button
           onClick={() => setAddingNew(true)}
           disabled={isPending}
-          className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-teal-400 hover:text-teal-600 transition-colors font-medium"
+          className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-orange-400 hover:text-orange-500 transition-colors font-medium"
         >
           + Add Section
         </button>

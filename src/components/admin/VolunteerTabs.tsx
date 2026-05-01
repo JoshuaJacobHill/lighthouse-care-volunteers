@@ -26,8 +26,8 @@ export function VolunteerTabs({ tabs, defaultTab }: VolunteerTabsProps) {
             className={clsx(
               'shrink-0 px-4 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent transition-colors',
               'hover:text-gray-700 hover:border-gray-300',
-              'data-[state=active]:border-teal-600 data-[state=active]:text-teal-700',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-inset'
+              'data-[state=active]:border-orange-500 data-[state=active]:text-orange-600',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-inset'
             )}
           >
             {tab.label}

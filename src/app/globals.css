@@ -2,9 +2,9 @@
 
 :root {
   /* Lighthouse Care brand colours */
-  --color-primary: #0d9488;       /* teal-600 */
-  --color-primary-dark: #0f766e;  /* teal-700 */
-  --color-secondary: #d97706;     /* amber-600 */
+  --color-primary: #F26522;       /* LC orange */
+  --color-primary-dark: #d95512;  /* LC orange dark */
+  --color-secondary: #1a1a2e;     /* dark navy — header/sidebar */
   --background: #f9fafb;          /* gray-50 — warm white */
   --foreground: #111827;          /* gray-900 */
 }
@@ -33,7 +33,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Focus visible — teal ring for keyboard nav */
+/* Focus visible — orange ring for keyboard nav */
 :focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;

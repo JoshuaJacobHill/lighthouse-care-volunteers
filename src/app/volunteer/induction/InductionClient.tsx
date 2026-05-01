@@ -163,7 +163,7 @@ export default function InductionClient({
             </div>
             <Link
               href="/volunteer"
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium bg-teal-600 text-white hover:bg-teal-700 transition-colors"
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium bg-orange-500 text-white hover:bg-orange-600 transition-colors"
             >
               Back to Dashboard
             </Link>
@@ -199,7 +199,7 @@ export default function InductionClient({
                 </div>
                 <Link
                   href="/volunteer"
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium bg-teal-600 text-white hover:bg-teal-700 transition-colors"
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium bg-orange-500 text-white hover:bg-orange-600 transition-colors"
                 >
                   Go to Dashboard
                 </Link>
@@ -266,7 +266,7 @@ export default function InductionClient({
           </span>
           <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-teal-600 rounded-full transition-all"
+              className="h-full bg-orange-500 rounded-full transition-all"
               style={{ width: `${((quizQuestionIndex + 1) / questions.length) * 100}%` }}
               role="progressbar"
               aria-valuenow={quizQuestionIndex + 1}
@@ -289,8 +289,8 @@ export default function InductionClient({
                     className={clsx(
                       'flex items-start gap-3 rounded-lg border p-3 cursor-pointer transition-colors',
                       selectedAnswers[currentQuestion.id] === option.id
-                        ? 'border-teal-600 bg-teal-50'
-                        : 'border-gray-200 bg-white hover:border-teal-200 hover:bg-teal-50/50'
+                        ? 'border-orange-500 bg-orange-50'
+                        : 'border-gray-200 bg-white hover:border-orange-200 hover:bg-orange-50/50'
                     )}
                   >
                     <input
@@ -301,7 +301,7 @@ export default function InductionClient({
                       onChange={() =>
                         setSelectedAnswers((prev) => ({ ...prev, [currentQuestion.id]: option.id }))
                       }
-                      className="mt-0.5 h-4 w-4 text-teal-600 border-gray-300 focus:ring-teal-600 shrink-0"
+                      className="mt-0.5 h-4 w-4 text-orange-500 border-gray-300 focus:ring-orange-500 shrink-0"
                     />
                     <span className="text-sm text-gray-800">{option.optionText}</span>
                   </label>
@@ -398,7 +398,7 @@ export default function InductionClient({
                       className={clsx(
                         'w-full flex items-start gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm transition-colors',
                         isCurrent
-                          ? 'bg-teal-600 text-white'
+                          ? 'bg-orange-500 text-white'
                           : completed
                           ? 'text-gray-700 hover:bg-gray-100'
                           : 'text-gray-500 hover:bg-gray-50'
@@ -432,7 +432,7 @@ export default function InductionClient({
             </div>
             <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
               <div
-                className="h-full bg-teal-600 rounded-full transition-all"
+                className="h-full bg-orange-500 rounded-full transition-all"
                 style={{
                   width: `${(Object.values(progressMap).filter(Boolean).length / sections.length) * 100}%`,
                 }}
@@ -464,7 +464,7 @@ export default function InductionClient({
               <CardContent className="pt-5">
                 {/* Section content rendered as HTML */}
                 <div
-                  className="max-w-none text-sm text-gray-700 leading-relaxed [&_h1]:text-xl [&_h1]:font-bold [&_h1]:text-gray-900 [&_h1]:mb-3 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-gray-900 [&_h2]:mb-2 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-gray-900 [&_h3]:mb-2 [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-3 [&_li]:mb-1 [&_a]:text-teal-600 [&_a]:underline [&_strong]:font-semibold [&_blockquote]:border-l-4 [&_blockquote]:border-gray-200 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-600"
+                  className="max-w-none text-sm text-gray-700 leading-relaxed [&_h1]:text-xl [&_h1]:font-bold [&_h1]:text-gray-900 [&_h1]:mb-3 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-gray-900 [&_h2]:mb-2 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-gray-900 [&_h3]:mb-2 [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-3 [&_li]:mb-1 [&_a]:text-orange-500 [&_a]:underline [&_strong]:font-semibold [&_blockquote]:border-l-4 [&_blockquote]:border-gray-200 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-600"
                   dangerouslySetInnerHTML={{ __html: currentSection.content }}
                 />
 
@@ -530,8 +530,8 @@ export default function InductionClient({
 
                 {/* Prompt to start quiz once all sections done */}
                 {allSectionsComplete && questions.length > 0 && (
-                  <div className="mt-4 rounded-lg border border-teal-200 bg-teal-50 p-4 text-center">
-                    <p className="text-sm font-semibold text-teal-800 mb-2">
+                  <div className="mt-4 rounded-lg border border-orange-200 bg-orange-50 p-4 text-center">
+                    <p className="text-sm font-semibold text-orange-700 mb-2">
                       Great work — all sections complete!
                     </p>
                     <Button

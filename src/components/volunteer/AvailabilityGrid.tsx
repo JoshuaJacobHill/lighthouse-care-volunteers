@@ -133,10 +133,10 @@ export function AvailabilityGrid({
                         onClick={() => toggle(day, period)}
                         className={clsx(
                           'mx-auto flex h-9 w-9 items-center justify-center rounded-lg border-2 transition-colors',
-                          'focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-1',
+                          'focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-1',
                           available
-                            ? 'border-teal-600 bg-teal-600 text-white hover:bg-teal-700 hover:border-teal-700'
-                            : 'border-gray-200 bg-white text-transparent hover:border-teal-300 hover:bg-teal-50'
+                            ? 'border-orange-500 bg-orange-500 text-white hover:bg-orange-600 hover:border-orange-600'
+                            : 'border-gray-200 bg-white text-transparent hover:border-orange-300 hover:bg-orange-50'
                         )}
                       >
                         <Check className="h-4 w-4" strokeWidth={3} aria-hidden="true" />
@@ -147,7 +147,7 @@ export function AvailabilityGrid({
                         className={clsx(
                           'mx-auto flex h-9 w-9 items-center justify-center rounded-lg',
                           available
-                            ? 'bg-teal-600 text-white'
+                            ? 'bg-orange-500 text-white'
                             : 'bg-gray-100 text-transparent'
                         )}
                       >

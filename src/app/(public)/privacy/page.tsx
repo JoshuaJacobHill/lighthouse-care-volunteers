@@ -11,7 +11,7 @@ export default function PrivacyPage() {
       <div className="mx-auto max-w-3xl">
         {/* Header */}
         <div className="mb-10 border-b border-gray-200 pb-8">
-          <p className="text-sm font-medium uppercase tracking-wide text-teal-600 mb-2">
+          <p className="text-sm font-medium uppercase tracking-wide text-orange-500 mb-2">
             Lighthouse Care
           </p>
           <h1 className="text-4xl font-bold text-gray-900">Privacy Policy</h1>
@@ -175,7 +175,7 @@ export default function PrivacyPage() {
               If you have any questions about this privacy policy or how we handle your personal
               information, please contact us:
             </p>
-            <div className="mt-4 rounded-xl bg-teal-50 border border-teal-100 p-5 text-sm text-teal-900">
+            <div className="mt-4 rounded-xl bg-orange-50 border border-orange-100 p-5 text-sm text-orange-800">
               <p className="font-semibold">Lighthouse Care</p>
               <p>Logan, South East Queensland</p>
               <p className="mt-1">ABN 87 637 110 948</p>

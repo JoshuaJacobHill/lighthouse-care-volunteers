@@ -35,7 +35,7 @@ const STATUS_STYLES: Record<string, string> = {
   SCHEDULED: 'bg-blue-100 text-blue-700',
   CONFIRMED: 'bg-green-100 text-green-700',
   CANCELLED_BY_VOLUNTEER: 'bg-red-100 text-red-700',
-  ATTENDED: 'bg-teal-100 text-teal-700',
+  ATTENDED: 'bg-orange-100 text-orange-600',
   NO_SHOW: 'bg-orange-100 text-orange-700',
   ADMIN_CANCELLED: 'bg-gray-100 text-gray-600',
 }
@@ -124,7 +124,7 @@ export default async function RosterPage({ searchParams }: PageProps) {
         </Link>
         <Link
           href={`/admin/roster?week=${thisWeek}`}
-          className="rounded-lg border border-teal-200 bg-teal-50 px-3 py-2 text-sm font-medium text-teal-700 hover:bg-teal-100 transition-colors"
+          className="rounded-lg border border-orange-200 bg-orange-50 px-3 py-2 text-sm font-medium text-orange-600 hover:bg-orange-100 transition-colors"
         >
           This Week
         </Link>

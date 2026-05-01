@@ -95,7 +95,7 @@ export function TemplateEditor({ template }: TemplateEditorProps) {
           type="text"
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
-          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30"
+          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30"
         />
       </div>
 
@@ -108,7 +108,7 @@ export function TemplateEditor({ template }: TemplateEditorProps) {
           value={bodyHtml}
           onChange={(e) => setBodyHtml(e.target.value)}
           rows={16}
-          className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm font-mono text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30 resize-y"
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm font-mono text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30 resize-y"
           spellCheck={false}
         />
       </div>
@@ -123,7 +123,7 @@ export function TemplateEditor({ template }: TemplateEditorProps) {
           value={bodyText}
           onChange={(e) => setBodyText(e.target.value)}
           rows={6}
-          className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm font-mono text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30 resize-y"
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm font-mono text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30 resize-y"
           spellCheck={false}
         />
       </div>
@@ -134,7 +134,7 @@ export function TemplateEditor({ template }: TemplateEditorProps) {
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {AVAILABLE_VARS.map(({ key, desc }) => (
             <div key={key} className="flex items-center gap-2">
-              <code className="rounded bg-white border border-gray-200 px-2 py-0.5 text-xs font-mono text-teal-700">
+              <code className="rounded bg-white border border-gray-200 px-2 py-0.5 text-xs font-mono text-orange-600">
                 {key}
               </code>
               <span className="text-xs text-gray-500">{desc}</span>
@@ -160,7 +160,7 @@ export function TemplateEditor({ template }: TemplateEditorProps) {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 rounded-lg bg-teal-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50 transition-colors"
+          className="flex items-center gap-2 rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-orange-600 disabled:opacity-50 transition-colors"
         >
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           Save Template

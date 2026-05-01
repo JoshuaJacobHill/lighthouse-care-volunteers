@@ -62,7 +62,7 @@ export default function AvailabilityEditorClient({ initialAvailability }: Availa
               'No availability selected'
             ) : (
               <span>
-                <span className="font-semibold text-teal-700">{selectedCount}</span>{' '}
+                <span className="font-semibold text-orange-600">{selectedCount}</span>{' '}
                 {selectedCount === 1 ? 'slot' : 'slots'} selected
               </span>
             )}

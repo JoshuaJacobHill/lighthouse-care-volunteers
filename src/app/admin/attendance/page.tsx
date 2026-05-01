@@ -48,7 +48,7 @@ function TabLink({
       className={clsx(
         'shrink-0 px-4 py-3 text-sm font-medium border-b-2 transition-colors',
         active
-          ? 'border-teal-600 text-teal-700'
+          ? 'border-orange-500 text-orange-600'
           : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
       )}
     >
@@ -77,7 +77,7 @@ function RangeLink({
       className={clsx(
         'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
         active
-          ? 'bg-teal-600 text-white'
+          ? 'bg-orange-500 text-white'
           : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
       )}
     >
@@ -311,7 +311,7 @@ function AttendanceTable({
                   <td className="px-4 py-3">
                     <Link
                       href={`/admin/volunteers/${r.volunteer.id}`}
-                      className="font-medium text-teal-700 hover:text-teal-800"
+                      className="font-medium text-orange-600 hover:text-orange-700"
                     >
                       {r.volunteer.firstName} {r.volunteer.lastName}
                     </Link>
@@ -372,7 +372,7 @@ function NoShowsTable({
                 <td className="px-4 py-3">
                   <Link
                     href={`/admin/volunteers/${r.volunteer.id}`}
-                    className="font-medium text-teal-700 hover:text-teal-800"
+                    className="font-medium text-orange-600 hover:text-orange-700"
                   >
                     {r.volunteer.firstName} {r.volunteer.lastName}
                   </Link>
@@ -432,7 +432,7 @@ function InactiveTable({
                   <td className="px-4 py-3">
                     <Link
                       href={`/admin/volunteers/${v.id}`}
-                      className="font-medium text-teal-700 hover:text-teal-800"
+                      className="font-medium text-orange-600 hover:text-orange-700"
                     >
                       {v.firstName} {v.lastName}
                     </Link>

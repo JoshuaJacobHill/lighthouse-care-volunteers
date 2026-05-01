@@ -118,7 +118,7 @@ export function OnSiteClient({ registered, guests }: OnSiteClientProps) {
           <p className="mt-0.5 text-sm text-gray-500">Updates automatically every minute.</p>
         </div>
         <div className="text-right">
-          <p className="text-4xl font-bold text-teal-700">{total}</p>
+          <p className="text-4xl font-bold text-orange-600">{total}</p>
           <p className="text-sm text-gray-500">
             volunteer{total !== 1 ? 's' : ''} on site
           </p>

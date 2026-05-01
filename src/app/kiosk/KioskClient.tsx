@@ -312,10 +312,10 @@ export default function KioskClient({ locations, defaultLocationId }: KioskClien
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
         {/* Header */}
-        <div className="bg-teal-600 px-6 py-5 flex items-center gap-4">
+        <div className="bg-orange-500 px-6 py-5 flex items-center gap-4">
           <button
             onClick={goHome}
-            className="flex items-center gap-2 text-teal-100 hover:text-white transition-colors rounded-lg p-2 hover:bg-white/10"
+            className="flex items-center gap-2 text-orange-100 hover:text-white transition-colors rounded-lg p-2 hover:bg-white/10"
           >
             <ArrowLeft className="h-6 w-6" />
             <span className="text-lg font-medium">Back</span>
@@ -349,12 +349,12 @@ export default function KioskClient({ locations, defaultLocationId }: KioskClien
                 onKeyDown={(e) => e.key === 'Enter' && handleLookup()}
                 placeholder="Email or mobile number…"
                 autoFocus
-                className="flex-1 rounded-xl border-2 border-gray-300 px-5 py-4 text-xl text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-0"
+                className="flex-1 rounded-xl border-2 border-gray-300 px-5 py-4 text-xl text-gray-900 placeholder-gray-400 focus:border-orange-500 focus:outline-none focus:ring-0"
               />
               <button
                 onClick={handleLookup}
                 disabled={!query.trim() || lookupLoading}
-                className="flex items-center gap-2 rounded-xl bg-teal-600 px-6 py-4 text-white text-xl font-semibold hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex items-center gap-2 rounded-xl bg-orange-500 px-6 py-4 text-white text-xl font-semibold hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {lookupLoading ? (
                   <Loader2 className="h-6 w-6 animate-spin" />
@@ -411,7 +411,7 @@ export default function KioskClient({ locations, defaultLocationId }: KioskClien
                         }
                       }}
                       disabled={actionLoading}
-                      className="w-full flex items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-6 py-5 text-left hover:border-teal-400 hover:bg-teal-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+                      className="w-full flex items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-6 py-5 text-left hover:border-orange-400 hover:bg-orange-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
                     >
                       <div>
                         <div className="text-xl font-semibold text-gray-900">
@@ -420,9 +420,9 @@ export default function KioskClient({ locations, defaultLocationId }: KioskClien
                         <div className="text-gray-500 text-sm mt-0.5">{v.email}</div>
                       </div>
                       {actionLoading && selectedVolunteer?.id === v.id ? (
-                        <Loader2 className="h-6 w-6 animate-spin text-teal-600" />
+                        <Loader2 className="h-6 w-6 animate-spin text-orange-500" />
                       ) : (
-                        <ChevronRight className="h-6 w-6 text-gray-400 group-hover:text-teal-600 transition-colors" />
+                        <ChevronRight className="h-6 w-6 text-gray-400 group-hover:text-orange-500 transition-colors" />
                       )}
                     </button>
                   ))}
@@ -600,11 +600,11 @@ export default function KioskClient({ locations, defaultLocationId }: KioskClien
       {/* Top bar */}
       <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500">
             <Heart className="h-5 w-5 text-white" aria-hidden="true" />
           </div>
           <div>
-            <div className="font-bold text-teal-700 text-lg leading-none">Lighthouse Care</div>
+            <div className="font-bold text-orange-600 text-lg leading-none">Lighthouse Care</div>
             <div className="text-xs text-gray-500 leading-none mt-0.5">Volunteer Kiosk</div>
           </div>
         </div>
@@ -614,13 +614,13 @@ export default function KioskClient({ locations, defaultLocationId }: KioskClien
 
       {/* Location selector */}
       {locations.length > 1 && (
-        <div className="bg-teal-50 border-b border-teal-100 px-6 py-3">
+        <div className="bg-orange-50 border-b border-orange-100 px-6 py-3">
           <div className="max-w-2xl mx-auto flex items-center gap-3">
-            <span className="text-sm font-medium text-teal-700">Location:</span>
+            <span className="text-sm font-medium text-orange-600">Location:</span>
             <select
               value={selectedLocationId}
               onChange={(e) => setSelectedLocationId(e.target.value)}
-              className="rounded-lg border border-teal-200 bg-white px-3 py-1.5 text-sm text-gray-800 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30"
+              className="rounded-lg border border-orange-200 bg-white px-3 py-1.5 text-sm text-gray-800 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30"
             >
               {locations.map((loc) => (
                 <option key={loc.id} value={loc.id}>
@@ -649,13 +649,13 @@ export default function KioskClient({ locations, defaultLocationId }: KioskClien
                 resetLookup()
                 setScreen('lookup-signin')
               }}
-              className="w-full flex items-center justify-between rounded-2xl bg-teal-600 px-8 py-7 text-white hover:bg-teal-700 active:scale-[0.99] transition-all shadow-lg shadow-teal-600/30"
+              className="w-full flex items-center justify-between rounded-2xl bg-orange-500 px-8 py-7 text-white hover:bg-orange-600 active:scale-[0.99] transition-all shadow-lg shadow-orange-500/30"
             >
               <div className="text-left">
                 <div className="text-3xl font-bold">Sign In</div>
-                <div className="text-teal-200 mt-1 text-lg">Start your volunteer shift</div>
+                <div className="text-orange-200 mt-1 text-lg">Start your volunteer shift</div>
               </div>
-              <LogIn className="h-12 w-12 text-teal-200 shrink-0" aria-hidden="true" />
+              <LogIn className="h-12 w-12 text-orange-200 shrink-0" aria-hidden="true" />
             </button>
 
             <button
@@ -663,7 +663,7 @@ export default function KioskClient({ locations, defaultLocationId }: KioskClien
                 resetLookup()
                 setScreen('lookup-signout')
               }}
-              className="w-full flex items-center justify-between rounded-2xl bg-white border-2 border-gray-200 px-8 py-7 text-gray-900 hover:border-teal-300 hover:bg-teal-50 active:scale-[0.99] transition-all shadow-sm"
+              className="w-full flex items-center justify-between rounded-2xl bg-white border-2 border-gray-200 px-8 py-7 text-gray-900 hover:border-orange-300 hover:bg-orange-50 active:scale-[0.99] transition-all shadow-sm"
             >
               <div className="text-left">
                 <div className="text-3xl font-bold">Sign Out</div>
@@ -715,22 +715,22 @@ function ConfirmScreen({
 
   if (type === 'signin') {
     return (
-      <div className="min-h-screen bg-teal-600 flex flex-col items-center justify-center px-6 text-center">
+      <div className="min-h-screen bg-orange-500 flex flex-col items-center justify-center px-6 text-center">
         <div className="mb-6">
           <CheckCircle2 className="h-24 w-24 text-white mx-auto mb-6" aria-hidden="true" />
           <h1 className="text-5xl font-bold text-white mb-3">
             Welcome, {name}!
           </h1>
-          <p className="text-teal-200 text-2xl">
+          <p className="text-orange-200 text-2xl">
             You&apos;re signed in at {location}
           </p>
           {time && (
-            <p className="text-teal-300 text-xl mt-2">
+            <p className="text-orange-300 text-xl mt-2">
               Sign-in time: {time}
             </p>
           )}
         </div>
-        <div className="mt-8 text-teal-200 text-lg">
+        <div className="mt-8 text-orange-200 text-lg">
           Returning to home screen in{' '}
           <span className="font-bold text-white text-2xl">{countdown}</span>
           {countdown === 1 ? ' second' : ' seconds'}…

@@ -115,7 +115,7 @@ export function SettingsTabs({ settings, admins, isSuperAdmin }: SettingsTabsPro
             onClick={() => setTab(t.id)}
             className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px ${
               tab === t.id
-                ? 'border-teal-600 text-teal-600'
+                ? 'border-orange-500 text-orange-500'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -147,7 +147,7 @@ export function SettingsTabs({ settings, admins, isSuperAdmin }: SettingsTabsPro
             <select
               value={values.email_provider ?? 'mock'}
               onChange={(e) => update('email_provider', e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30 bg-white"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30 bg-white"
             >
               <option value="mock">Mock (development — logs to console)</option>
               <option value="resend">Resend</option>
@@ -262,9 +262,9 @@ export function SettingsTabs({ settings, admins, isSuperAdmin }: SettingsTabsPro
           <div className="grid gap-3 sm:grid-cols-2">
             <Link
               href="/admin/settings/induction"
-              className="flex flex-col gap-1 rounded-xl border border-gray-200 bg-white p-5 hover:border-teal-300 hover:bg-teal-50/50 transition-colors group"
+              className="flex flex-col gap-1 rounded-xl border border-gray-200 bg-white p-5 hover:border-orange-300 hover:bg-orange-50/50 transition-colors group"
             >
-              <div className="text-base font-semibold text-gray-900 group-hover:text-teal-700">
+              <div className="text-base font-semibold text-gray-900 group-hover:text-orange-600">
                 Induction Sections
               </div>
               <p className="text-sm text-gray-500">
@@ -273,9 +273,9 @@ export function SettingsTabs({ settings, admins, isSuperAdmin }: SettingsTabsPro
             </Link>
             <Link
               href="/admin/settings/quiz"
-              className="flex flex-col gap-1 rounded-xl border border-gray-200 bg-white p-5 hover:border-teal-300 hover:bg-teal-50/50 transition-colors group"
+              className="flex flex-col gap-1 rounded-xl border border-gray-200 bg-white p-5 hover:border-orange-300 hover:bg-orange-50/50 transition-colors group"
             >
-              <div className="text-base font-semibold text-gray-900 group-hover:text-teal-700">
+              <div className="text-base font-semibold text-gray-900 group-hover:text-orange-600">
                 Quiz Questions
               </div>
               <p className="text-sm text-gray-500">
@@ -293,7 +293,7 @@ export function SettingsTabs({ settings, admins, isSuperAdmin }: SettingsTabsPro
             <h2 className="text-base font-semibold text-gray-900">Admin Users</h2>
             <button
               onClick={() => setAddAdminOpen(true)}
-              className="flex items-center gap-2 rounded-lg bg-teal-600 px-3 py-2 text-sm font-medium text-white hover:bg-teal-700 transition-colors"
+              className="flex items-center gap-2 rounded-lg bg-orange-500 px-3 py-2 text-sm font-medium text-white hover:bg-orange-600 transition-colors"
             >
               <UserPlus className="h-4 w-4" />
               Add Admin
@@ -379,7 +379,7 @@ export function SettingsTabs({ settings, admins, isSuperAdmin }: SettingsTabsPro
                       onChange={(e) =>
                         setAddAdminForm((p) => ({ ...p, name: e.target.value }))
                       }
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
                     />
                   </div>
                   <div>
@@ -393,7 +393,7 @@ export function SettingsTabs({ settings, admins, isSuperAdmin }: SettingsTabsPro
                       onChange={(e) =>
                         setAddAdminForm((p) => ({ ...p, email: e.target.value }))
                       }
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
                     />
                   </div>
                   <div>
@@ -408,7 +408,7 @@ export function SettingsTabs({ settings, admins, isSuperAdmin }: SettingsTabsPro
                       onChange={(e) =>
                         setAddAdminForm((p) => ({ ...p, password: e.target.value }))
                       }
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
                     />
                   </div>
                   <div>
@@ -418,7 +418,7 @@ export function SettingsTabs({ settings, admins, isSuperAdmin }: SettingsTabsPro
                       onChange={(e) =>
                         setAddAdminForm((p) => ({ ...p, role: e.target.value }))
                       }
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none bg-white"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none bg-white"
                     >
                       <option value="ADMIN">Admin</option>
                       <option value="SUPER_ADMIN">Super Admin</option>
@@ -446,7 +446,7 @@ export function SettingsTabs({ settings, admins, isSuperAdmin }: SettingsTabsPro
                   <button
                     onClick={handleAddAdmin}
                     disabled={addAdminLoading}
-                    className="flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50 transition-colors"
+                    className="flex items-center gap-2 rounded-lg bg-orange-500 px-4 py-2 text-sm font-medium text-white hover:bg-orange-600 disabled:opacity-50 transition-colors"
                   >
                     {addAdminLoading ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -492,7 +492,7 @@ function SettingField({
         value={value}
         onChange={(e) => onChange(settingKey, e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30"
+        className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30"
       />
       {helpText && <p className="mt-1 text-xs text-gray-400">{helpText}</p>}
     </div>
@@ -525,7 +525,7 @@ function SaveBar({
       <button
         onClick={onSave}
         disabled={saving}
-        className="flex items-center gap-2 rounded-lg bg-teal-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50 transition-colors"
+        className="flex items-center gap-2 rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-orange-600 disabled:opacity-50 transition-colors"
       >
         {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
         Save Settings

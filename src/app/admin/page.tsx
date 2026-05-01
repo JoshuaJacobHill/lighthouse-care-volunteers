@@ -125,7 +125,7 @@ export default async function AdminDashboardPage() {
       icon: Users,
       value: activeCount,
       label: 'Active Volunteers',
-      colour: 'bg-teal-100 text-teal-700',
+      colour: 'bg-orange-100 text-orange-600',
     },
     {
       icon: Clock,
@@ -189,7 +189,7 @@ export default async function AdminDashboardPage() {
             <h2 className="text-base font-semibold text-gray-900">Recent Sign-ups</h2>
             <Link
               href="/admin/volunteers"
-              className="text-sm font-medium text-teal-600 hover:text-teal-700"
+              className="text-sm font-medium text-orange-500 hover:text-orange-600"
             >
               View all
             </Link>
@@ -217,7 +217,7 @@ export default async function AdminDashboardPage() {
                     <StatusBadge status={v.status} />
                     <Link
                       href={`/admin/volunteers/${v.id}`}
-                      className="text-xs font-medium text-teal-600 hover:text-teal-700"
+                      className="text-xs font-medium text-orange-500 hover:text-orange-600"
                     >
                       View
                     </Link>
@@ -234,7 +234,7 @@ export default async function AdminDashboardPage() {
             <h2 className="text-base font-semibold text-gray-900">Currently On Site</h2>
             <Link
               href="/admin/on-site"
-              className="text-sm font-medium text-teal-600 hover:text-teal-700"
+              className="text-sm font-medium text-orange-500 hover:text-orange-600"
             >
               Manage
             </Link>

@@ -201,7 +201,7 @@ function Step1({
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
           <select
-            className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600"
+            className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
             value={data.state}
             onChange={(e) => onChange({ state: e.target.value })}
             autoComplete="address-level1"
@@ -272,7 +272,7 @@ function Step2({
       <div className="flex flex-col gap-1">
         <label className="text-sm font-medium text-gray-700">Medical notes (optional)</label>
         <textarea
-          className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 resize-none"
+          className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"
           rows={3}
           placeholder="Any medical conditions or medications we should be aware of in an emergency..."
           value={data.medicalNotes}
@@ -282,7 +282,7 @@ function Step2({
       <div className="flex flex-col gap-1">
         <label className="text-sm font-medium text-gray-700">Accessibility needs (optional)</label>
         <textarea
-          className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 resize-none"
+          className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"
           rows={3}
           placeholder="Any accessibility requirements or accommodations we can help with..."
           value={data.accessibilityNeeds}
@@ -304,14 +304,14 @@ function Step2({
               value={option}
               checked={data.blueCardStatus === option}
               onChange={() => onChange({ blueCardStatus: option })}
-              className="h-4 w-4 text-teal-600 border-gray-300 focus:ring-teal-600"
+              className="h-4 w-4 text-orange-500 border-gray-300 focus:ring-orange-500"
             />
             <span className="text-sm text-gray-700">{option}</span>
           </label>
         ))}
       </div>
       {showBlueCardFields && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-2 pl-4 border-l-2 border-teal-200">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-2 pl-4 border-l-2 border-orange-200">
           <Input
             label="Blue Card number"
             value={data.blueCardNumber}
@@ -422,7 +422,7 @@ function Step3({
                               availability: toggleAvailability(data.availability, day, period),
                             })
                           }
-                          className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-600 cursor-pointer"
+                          className="h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500 cursor-pointer"
                         />
                       </td>
                     )
@@ -440,7 +440,7 @@ function Step3({
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Other notes (optional)</label>
         <textarea
-          className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 resize-none"
+          className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"
           rows={3}
           placeholder="Anything else you'd like us to know about your volunteering preferences..."
           value={data.notes}
@@ -519,14 +519,14 @@ function Step4({
             <input
               id="agreedToTerms"
               type="checkbox"
-              className="mt-0.5 h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-600 cursor-pointer"
+              className="mt-0.5 h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500 cursor-pointer"
               checked={data.agreedToTerms}
               onChange={(e) => onChange({ agreedToTerms: e.target.checked })}
             />
             <div className="flex flex-col gap-0.5">
               <label htmlFor="agreedToTerms" className="text-sm font-medium text-gray-700 cursor-pointer">
                 I have read and agree to the{' '}
-                <Link href="/terms" target="_blank" className="text-teal-600 underline hover:text-teal-700">
+                <Link href="/terms" target="_blank" className="text-orange-500 underline hover:text-orange-600">
                   Volunteer Terms &amp; Conditions
                 </Link>{' '}
                 *
@@ -542,14 +542,14 @@ function Step4({
             <input
               id="agreedToPrivacy"
               type="checkbox"
-              className="mt-0.5 h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-600 cursor-pointer"
+              className="mt-0.5 h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500 cursor-pointer"
               checked={data.agreedToPrivacy}
               onChange={(e) => onChange({ agreedToPrivacy: e.target.checked })}
             />
             <div className="flex flex-col gap-0.5">
               <label htmlFor="agreedToPrivacy" className="text-sm font-medium text-gray-700 cursor-pointer">
                 I have read and agree to the{' '}
-                <Link href="/privacy" target="_blank" className="text-teal-600 underline hover:text-teal-700">
+                <Link href="/privacy" target="_blank" className="text-orange-500 underline hover:text-orange-600">
                   Privacy Policy
                 </Link>{' '}
                 *
@@ -696,8 +696,8 @@ export default function SignupPage() {
       <div className="min-h-[60vh] flex items-center justify-center py-16 px-4">
         <Card className="max-w-lg w-full text-center">
           <div className="p-8">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-teal-100">
-              <CheckCircle className="h-8 w-8 text-teal-600" aria-hidden="true" />
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100">
+              <CheckCircle className="h-8 w-8 text-orange-500" aria-hidden="true" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900">
               Thank you for signing up, {formData.firstName}!
@@ -738,14 +738,14 @@ export default function SignupPage() {
         {/* Progress bar */}
         <div className="mb-6">
           <div className="flex justify-between mb-2">
-            <span className="text-sm font-medium text-teal-700">
+            <span className="text-sm font-medium text-orange-600">
               Step {step} of {totalSteps}: {STEP_TITLES[step - 1]}
             </span>
             <span className="text-sm text-gray-500">{Math.round(progressPct)}% complete</span>
           </div>
           <div className="h-2 w-full rounded-full bg-gray-200">
             <div
-              className="h-2 rounded-full bg-teal-600 transition-all duration-300"
+              className="h-2 rounded-full bg-orange-500 transition-all duration-300"
               style={{ width: `${progressPct === 0 ? 5 : progressPct}%` }}
               role="progressbar"
               aria-valuenow={step}
@@ -757,7 +757,7 @@ export default function SignupPage() {
             {STEP_TITLES.map((title, i) => (
               <span
                 key={title}
-                className={`text-xs font-medium ${i + 1 <= step ? 'text-teal-600' : 'text-gray-400'}`}
+                className={`text-xs font-medium ${i + 1 <= step ? 'text-orange-500' : 'text-gray-400'}`}
               >
                 {i + 1}
               </span>
@@ -819,7 +819,7 @@ export default function SignupPage() {
 
         <p className="mt-6 text-center text-sm text-gray-600">
           Already registered?{' '}
-          <Link href="/login" className="text-teal-600 font-medium hover:underline">
+          <Link href="/login" className="text-orange-500 font-medium hover:underline">
             Sign in here
           </Link>
         </p>

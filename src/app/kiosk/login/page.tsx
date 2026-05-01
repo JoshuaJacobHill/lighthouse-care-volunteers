@@ -34,7 +34,7 @@ export default function KioskLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -42,7 +42,7 @@ export default function KioskLoginPage() {
             <Heart className="h-10 w-10 text-white" aria-hidden="true" />
           </div>
           <h1 className="text-3xl font-bold text-white">Lighthouse Care</h1>
-          <p className="mt-2 text-teal-200 text-lg">Volunteer Kiosk</p>
+          <p className="mt-2 text-orange-200 text-lg">Volunteer Kiosk</p>
         </div>
 
         {/* Card */}
@@ -65,7 +65,7 @@ export default function KioskLoginPage() {
                 type="email"
                 autoComplete="email"
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30 text-base"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30 text-base"
                 placeholder="kiosk@lighthousecare.org.au"
               />
             </div>
@@ -83,7 +83,7 @@ export default function KioskLoginPage() {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30 text-base"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30 text-base"
                 placeholder="••••••••"
               />
             </div>
@@ -118,7 +118,7 @@ export default function KioskLoginPage() {
           </p>
         </div>
 
-        <p className="text-center text-sm text-teal-200 mt-6">
+        <p className="text-center text-sm text-orange-200 mt-6">
           Making lives better so that together we can make the world better.
         </p>
       </div>

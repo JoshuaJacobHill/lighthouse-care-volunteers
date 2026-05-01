@@ -115,7 +115,7 @@ function QuestionCard({
 
   if (editing) {
     return (
-      <div className="bg-white border border-teal-300 rounded-lg p-5 shadow-sm">
+      <div className="bg-white border border-orange-300 rounded-lg p-5 shadow-sm">
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Question</label>
@@ -123,7 +123,7 @@ function QuestionCard({
               value={form.question}
               onChange={e => setForm(f => ({ ...f, question: e.target.value }))}
               rows={3}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
           <div>
@@ -132,7 +132,7 @@ function QuestionCard({
               type="number"
               value={form.sortOrder}
               onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))}
-              className="w-24 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-24 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
           <div>
@@ -149,7 +149,7 @@ function QuestionCard({
                     checked={option.isCorrect}
                     onChange={() => setCorrect(index)}
                     title="Mark as correct answer"
-                    className="w-4 h-4 accent-teal-600 flex-shrink-0"
+                    className="w-4 h-4 accent-orange-500 flex-shrink-0"
                   />
                   <input
                     type="text"
@@ -164,7 +164,7 @@ function QuestionCard({
                       }))
                     }}
                     placeholder={`Option ${index + 1}`}
-                    className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                   <button
                     type="button"
@@ -184,7 +184,7 @@ function QuestionCard({
               <button
                 type="button"
                 onClick={addOption}
-                className="mt-2 text-sm text-teal-600 hover:text-teal-700 font-medium"
+                className="mt-2 text-sm text-orange-500 hover:text-orange-600 font-medium"
               >
                 + Add option
               </button>
@@ -195,7 +195,7 @@ function QuestionCard({
             <button
               onClick={handleSave}
               disabled={isPending}
-              className="px-4 py-2 bg-teal-600 text-white text-sm rounded-md hover:bg-teal-700 disabled:opacity-50 transition-colors"
+              className="px-4 py-2 bg-orange-500 text-white text-sm rounded-md hover:bg-orange-600 disabled:opacity-50 transition-colors"
             >
               {isPending ? 'Saving…' : 'Save'}
             </button>
@@ -237,7 +237,7 @@ function QuestionCard({
         <div className="flex items-center gap-2 flex-shrink-0">
           <button
             onClick={() => setEditing(true)}
-            className="px-3 py-1.5 text-xs bg-teal-50 text-teal-700 rounded-md hover:bg-teal-100 transition-colors font-medium"
+            className="px-3 py-1.5 text-xs bg-orange-50 text-orange-600 rounded-md hover:bg-orange-100 transition-colors font-medium"
           >
             Edit
           </button>
@@ -319,8 +319,8 @@ function NewQuestionCard({
   }
 
   return (
-    <div className="bg-white border-2 border-dashed border-teal-300 rounded-lg p-5">
-      <h3 className="text-sm font-semibold text-teal-700 mb-4">New Question</h3>
+    <div className="bg-white border-2 border-dashed border-orange-300 rounded-lg p-5">
+      <h3 className="text-sm font-semibold text-orange-600 mb-4">New Question</h3>
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Question</label>
@@ -329,7 +329,7 @@ function NewQuestionCard({
             onChange={e => setForm(f => ({ ...f, question: e.target.value }))}
             rows={3}
             placeholder="e.g. What should you do if you feel unwell before your shift?"
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
         </div>
         <div>
@@ -338,7 +338,7 @@ function NewQuestionCard({
             type="number"
             value={form.sortOrder}
             onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))}
-            className="w-24 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="w-24 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
         </div>
         <div>
@@ -355,7 +355,7 @@ function NewQuestionCard({
                   checked={option.isCorrect}
                   onChange={() => setCorrect(index)}
                   title="Mark as correct answer"
-                  className="w-4 h-4 accent-teal-600 flex-shrink-0"
+                  className="w-4 h-4 accent-orange-500 flex-shrink-0"
                 />
                 <input
                   type="text"
@@ -370,7 +370,7 @@ function NewQuestionCard({
                     }))
                   }}
                   placeholder={`Option ${index + 1}`}
-                  className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
                 <button
                   type="button"
@@ -390,7 +390,7 @@ function NewQuestionCard({
             <button
               type="button"
               onClick={addOption}
-              className="mt-2 text-sm text-teal-600 hover:text-teal-700 font-medium"
+              className="mt-2 text-sm text-orange-500 hover:text-orange-600 font-medium"
             >
               + Add option
             </button>
@@ -401,7 +401,7 @@ function NewQuestionCard({
           <button
             onClick={handleSave}
             disabled={isPending}
-            className="px-4 py-2 bg-teal-600 text-white text-sm rounded-md hover:bg-teal-700 disabled:opacity-50 transition-colors"
+            className="px-4 py-2 bg-orange-500 text-white text-sm rounded-md hover:bg-orange-600 disabled:opacity-50 transition-colors"
           >
             {isPending ? 'Saving…' : 'Add Question'}
           </button>
@@ -472,7 +472,7 @@ export default function QuizManager({ questions: initial }: { questions: QuizQue
       {!addingNew && (
         <button
           onClick={() => setAddingNew(true)}
-          className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-teal-400 hover:text-teal-600 transition-colors font-medium"
+          className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-orange-400 hover:text-orange-500 transition-colors font-medium"
         >
           + Add Question
         </button>

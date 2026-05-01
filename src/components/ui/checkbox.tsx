@@ -25,9 +25,9 @@ const Checkbox = React.forwardRef<
         id={checkboxId}
         className={clsx(
           'peer mt-0.5 h-4 w-4 shrink-0 rounded border border-gray-300 shadow-sm',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2',
           'disabled:cursor-not-allowed disabled:opacity-50',
-          'data-[state=checked]:bg-teal-600 data-[state=checked]:border-teal-600 data-[state=checked]:text-white',
+          'data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 data-[state=checked]:text-white',
           error && 'border-red-500',
           className
         )}

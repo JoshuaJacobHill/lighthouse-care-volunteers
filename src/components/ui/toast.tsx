@@ -16,7 +16,7 @@ const variantStyles: Record<ToastVariant, string> = {
 }
 
 const variantIcons: Record<ToastVariant, React.ReactNode> = {
-  default: <Info className="h-5 w-5 text-teal-600 shrink-0" />,
+  default: <Info className="h-5 w-5 text-orange-500 shrink-0" />,
   success: <CheckCircle className="h-5 w-5 text-green-600 shrink-0" />,
   error: <AlertCircle className="h-5 w-5 text-red-600 shrink-0" />,
   warning: <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0" />,
@@ -53,7 +53,7 @@ function ToastItem({
       </div>
       <button
         onClick={() => onDismiss(id)}
-        className="shrink-0 rounded p-0.5 text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600"
+        className="shrink-0 rounded p-0.5 text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
         aria-label="Dismiss notification"
       >
         <X className="h-4 w-4" />

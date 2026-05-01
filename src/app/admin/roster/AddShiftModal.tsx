@@ -105,7 +105,7 @@ export function AddShiftModal({ locations, departments, weekStart }: AddShiftMod
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 transition-colors"
+        className="flex items-center gap-2 rounded-lg bg-orange-500 px-4 py-2 text-sm font-medium text-white hover:bg-orange-600 transition-colors"
       >
         <Plus className="h-4 w-4" />
         Add Shift
@@ -137,7 +137,7 @@ export function AddShiftModal({ locations, departments, weekStart }: AddShiftMod
               required
               value={form.date}
               onChange={(e) => update('date', e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30"
             />
           </div>
 
@@ -149,7 +149,7 @@ export function AddShiftModal({ locations, departments, weekStart }: AddShiftMod
                 required
                 value={form.startTime}
                 onChange={(e) => update('startTime', e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30"
               />
             </div>
             <div>
@@ -159,7 +159,7 @@ export function AddShiftModal({ locations, departments, weekStart }: AddShiftMod
                 required
                 value={form.endTime}
                 onChange={(e) => update('endTime', e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30"
               />
             </div>
           </div>
@@ -172,7 +172,7 @@ export function AddShiftModal({ locations, departments, weekStart }: AddShiftMod
               required
               value={form.locationId}
               onChange={(e) => update('locationId', e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30 bg-white"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30 bg-white"
             >
               <option value="">Select location…</option>
               {locations.map((l) => (
@@ -188,7 +188,7 @@ export function AddShiftModal({ locations, departments, weekStart }: AddShiftMod
             <select
               value={form.departmentId}
               onChange={(e) => update('departmentId', e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30 bg-white"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30 bg-white"
             >
               <option value="">No department</option>
               {departments.map((d) => (
@@ -208,7 +208,7 @@ export function AddShiftModal({ locations, departments, weekStart }: AddShiftMod
               value={form.title}
               onChange={(e) => update('title', e.target.value)}
               placeholder="e.g. Morning packing shift"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30"
             />
           </div>
 
@@ -223,7 +223,7 @@ export function AddShiftModal({ locations, departments, weekStart }: AddShiftMod
               max={100}
               value={form.capacity}
               onChange={(e) => update('capacity', parseInt(e.target.value) || 1)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30"
             />
           </div>
 
@@ -236,7 +236,7 @@ export function AddShiftModal({ locations, departments, weekStart }: AddShiftMod
               value={form.notes}
               onChange={(e) => update('notes', e.target.value)}
               placeholder="Any special instructions or notes for this shift…"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30 resize-none"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30 resize-none"
             />
           </div>
 
@@ -259,7 +259,7 @@ export function AddShiftModal({ locations, departments, weekStart }: AddShiftMod
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 rounded-lg bg-orange-500 px-4 py-2 text-sm font-medium text-white hover:bg-orange-600 disabled:opacity-50 transition-colors"
           >
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
             Create Shift

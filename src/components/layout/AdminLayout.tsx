@@ -57,7 +57,7 @@ export default function AdminLayout({ user, children }: AdminLayoutProps) {
             <button
               type="button"
               onClick={handleSignOut}
-              className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-600"
+              className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500"
               aria-label="Sign out"
             >
               <LogOut className="h-4 w-4" aria-hidden="true" />

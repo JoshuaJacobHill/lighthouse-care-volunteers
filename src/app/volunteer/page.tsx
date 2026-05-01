@@ -39,7 +39,7 @@ const SHIFT_STATUS_COLOURS: Record<string, string> = {
   SCHEDULED: 'bg-blue-100 text-blue-800 border border-blue-200',
   CONFIRMED: 'bg-green-100 text-green-800 border border-green-200',
   CANCELLED_BY_VOLUNTEER: 'bg-gray-100 text-gray-700 border border-gray-200',
-  ATTENDED: 'bg-teal-100 text-teal-800 border border-teal-200',
+  ATTENDED: 'bg-orange-100 text-orange-700 border border-orange-200',
   NO_SHOW: 'bg-red-100 text-red-800 border border-red-200',
   ADMIN_CANCELLED: 'bg-gray-100 text-gray-700 border border-gray-200',
 }
@@ -160,7 +160,7 @@ export default async function VolunteerDashboard() {
           </div>
           <Link
             href="/volunteer/induction"
-            className="inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-md px-3 text-xs font-medium transition-colors bg-teal-600 text-white hover:bg-teal-700 h-8 shrink-0"
+            className="inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-md px-3 text-xs font-medium transition-colors bg-orange-500 text-white hover:bg-orange-600 h-8 shrink-0"
           >
             Start Induction <ChevronRight className="h-4 w-4" />
           </Link>
@@ -185,14 +185,14 @@ export default async function VolunteerDashboard() {
         <Card>
           <CardContent className="pt-5 pb-4">
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Hours volunteered</p>
-            <p className="mt-1 text-3xl font-bold text-teal-700">{totalHours}</p>
+            <p className="mt-1 text-3xl font-bold text-orange-600">{totalHours}</p>
             <p className="text-xs text-gray-400 mt-0.5">across all sessions</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-5 pb-4">
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Shifts attended</p>
-            <p className="mt-1 text-3xl font-bold text-teal-700">{totalSessions}</p>
+            <p className="mt-1 text-3xl font-bold text-orange-600">{totalSessions}</p>
             <p className="text-xs text-gray-400 mt-0.5">recorded sessions</p>
           </CardContent>
         </Card>
@@ -217,7 +217,7 @@ export default async function VolunteerDashboard() {
           </h2>
           <Link
             href="/volunteer/shifts"
-            className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 text-xs font-medium transition-colors border border-teal-600 text-teal-600 bg-transparent hover:bg-teal-50 h-8"
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 text-xs font-medium transition-colors border border-orange-500 text-orange-500 bg-transparent hover:bg-orange-50 h-8"
           >
             View all
           </Link>
@@ -272,14 +272,14 @@ export default async function VolunteerDashboard() {
             <Link key={href} href={href} className="group">
               <Card className="h-full transition-shadow hover:shadow-md cursor-pointer">
                 <CardContent className="py-4 flex items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 group-hover:bg-teal-100 transition-colors shrink-0">
-                    <Icon className="h-5 w-5 text-teal-600" aria-hidden="true" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50 group-hover:bg-orange-100 transition-colors shrink-0">
+                    <Icon className="h-5 w-5 text-orange-500" aria-hidden="true" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-gray-900">{label}</p>
                     <p className="text-xs text-gray-500 mt-0.5">{description}</p>
                   </div>
-                  <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-teal-500 ml-auto shrink-0 transition-colors" aria-hidden="true" />
+                  <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-orange-500 ml-auto shrink-0 transition-colors" aria-hidden="true" />
                 </CardContent>
               </Card>
             </Link>

@@ -28,7 +28,7 @@ function getInitials(name?: string): string {
 /** Consistent avatar colour derived from the name string */
 function getAvatarColour(name?: string): string {
   const colours = [
-    'bg-teal-600',
+    'bg-orange-500',
     'bg-amber-600',
     'bg-blue-600',
     'bg-purple-600',

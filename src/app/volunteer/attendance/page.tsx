@@ -79,20 +79,20 @@ export default async function AttendancePage() {
         <Card>
           <CardContent className="pt-5 pb-4">
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Total hours</p>
-            <p className="mt-1 text-2xl font-bold text-teal-700">{totalHoursDisplay}</p>
+            <p className="mt-1 text-2xl font-bold text-orange-600">{totalHoursDisplay}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-5 pb-4">
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Sessions</p>
-            <p className="mt-1 text-2xl font-bold text-teal-700">{records.length}</p>
+            <p className="mt-1 text-2xl font-bold text-orange-600">{records.length}</p>
           </CardContent>
         </Card>
         {records.filter(r => r.durationMins).length > 0 && (
           <Card className="col-span-2 sm:col-span-1">
             <CardContent className="pt-5 pb-4">
               <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Avg. session</p>
-              <p className="mt-1 text-2xl font-bold text-teal-700">{formatDuration(avgDuration)}</p>
+              <p className="mt-1 text-2xl font-bold text-orange-600">{formatDuration(avgDuration)}</p>
             </CardContent>
           </Card>
         )}

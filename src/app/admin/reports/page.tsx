@@ -234,7 +234,7 @@ export default async function ReportsPage({ searchParams }: PageProps) {
             href={`/admin/reports?range=${r}`}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
               range === r
-                ? 'bg-teal-600 text-white'
+                ? 'bg-orange-500 text-white'
                 : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
             }`}
           >
@@ -276,7 +276,7 @@ export default async function ReportsPage({ searchParams }: PageProps) {
                     <td className="px-5 py-3">
                       <Link
                         href={`/admin/volunteers/${v.id}`}
-                        className="font-medium text-teal-700 hover:underline"
+                        className="font-medium text-orange-600 hover:underline"
                       >
                         {v.firstName} {v.lastName}
                       </Link>
@@ -312,7 +312,7 @@ export default async function ReportsPage({ searchParams }: PageProps) {
                 </div>
                 <div className="h-3 rounded-full bg-gray-100 overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-teal-500 transition-all"
+                    className="h-full rounded-full bg-orange-500 transition-all"
                     style={{
                       width: `${Math.round((loc.count / maxLocationCount) * 100)}%`,
                     }}
@@ -347,7 +347,7 @@ export default async function ReportsPage({ searchParams }: PageProps) {
                     <td className="px-5 py-3">
                       <Link
                         href={`/admin/volunteers/${v.id}`}
-                        className="font-medium text-teal-700 hover:underline"
+                        className="font-medium text-orange-600 hover:underline"
                       >
                         {v.firstName} {v.lastName}
                       </Link>
@@ -391,7 +391,7 @@ export default async function ReportsPage({ searchParams }: PageProps) {
                     <td className="px-5 py-3">
                       <Link
                         href={`/admin/volunteers/${v.id}`}
-                        className="font-medium text-teal-700 hover:underline"
+                        className="font-medium text-orange-600 hover:underline"
                       >
                         {v.firstName} {v.lastName}
                       </Link>

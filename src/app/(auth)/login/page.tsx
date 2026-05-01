@@ -90,7 +90,7 @@ export default function LoginPage() {
       <div className="mt-6 space-y-3 text-center text-sm text-gray-600">
         <p>
           New volunteer?{' '}
-          <Link href="/signup" className="font-medium text-teal-600 hover:underline">
+          <Link href="/signup" className="font-medium text-orange-500 hover:underline">
             Sign up here &rarr;
           </Link>
         </p>
