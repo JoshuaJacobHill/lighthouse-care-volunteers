@@ -72,20 +72,13 @@ const ROLE_CAPABILITIES: Record<string, Capability[]> = {
     'church.stories',
     'church.teams',
     'system.settings',
-    'business.reports',
   ],
   // Staff, volunteers and trainees; project tasks; Care good news. No giving
   // data of any kind, and no church contact details.
-  CARE_MANAGER: ['care.people', 'care.tasks', 'care.stories', 'business.reports'],
+  CARE_MANAGER: ['care.people', 'care.tasks', 'care.stories'],
   // The church side: member contact details, tithe transactions, church stories
   // and serving teams. No volunteer or staff management, no Care donor data.
-  CHURCH_MANAGER: [
-    'church.members',
-    'church.giving',
-    'church.stories',
-    'church.teams',
-    'business.reports',
-  ],
+  CHURCH_MANAGER: ['church.members', 'church.giving', 'church.stories', 'church.teams'],
 }
 
 export interface PermissionUser {
@@ -97,13 +90,15 @@ export interface PermissionUser {
 /** Does this user hold this capability? SUPER_ADMIN always does. */
 export function can(user: PermissionUser, capability: Capability): boolean {
   if (user.role === 'SUPER_ADMIN') return true
+
+  // The one capability granted by a switch rather than a role. Someone who
+  // should see store revenue — a coordinator, a manager — does not thereby
+  // need admin over volunteers, tasks or church records, and requiring a role
+  // as well would have meant handing out far more access than was asked for.
+  if (capability === 'business.reports') return user.canViewBusinessReports === true
   const held = ROLE_CAPABILITIES[user.role ?? ''] ?? []
   if (!held.includes(capability)) return false
   if (user.role === 'ADMIN' && ADMIN_OPT_IN.includes(capability) && user.canViewDonations !== true) return false
-  // Store revenue and ad spend are switched on per person, whatever the role.
-  // Listing it against the admin roles above only makes them eligible; this is
-  // what actually grants it, so adding someone is a tick rather than a deploy.
-  if (capability === 'business.reports' && user.canViewBusinessReports !== true) return false
   return true
 }
 

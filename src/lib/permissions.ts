@@ -62,8 +62,10 @@ export async function requireCapability(capability: Capability): Promise<{ userI
   const session = await getSession()
   if (!session) redirect('/login')
   const user = await getPermissionUser()
-  if (!user || !isAdminRole(user.role)) redirect('/login')
-  if (!can(user, capability)) redirect('/admin')
+  if (!user) redirect('/login')
+  // Flag-granted capabilities skip the admin-role gate; everything else keeps it.
+  if (capability !== 'business.reports' && !isAdminRole(user.role)) redirect('/login')
+  if (!can(user, capability)) redirect(isAdminRole(user.role) ? '/admin' : '/dashboard')
   return { userId: session.userId, role: session.role }
 }
 
@@ -129,5 +131,9 @@ export async function assertAnyCapability(capabilities: Capability[]): Promise<{
  */
 export async function hasCapability(capability: Capability): Promise<boolean> {
   const user = await getPermissionUser()
-  return !!user && isAdminRole(user.role) && can(user, capability)
+  if (!user) return false
+  // business.reports is granted by a per-person switch, so it deliberately does
+  // not require an admin role — see `can` in permissions-core.
+  if (capability === 'business.reports') return can(user, capability)
+  return isAdminRole(user.role) && can(user, capability)
 }

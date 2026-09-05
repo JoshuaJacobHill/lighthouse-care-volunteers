@@ -1543,6 +1543,12 @@ model SocialPost {
   spendCents  Int @default(0)
   conversions Int @default(0)
 
+  /// Which Mailchimp audience a campaign went to. Null for social posts.
+  /// Kept because a 1,200-send supporter update and a 40,000-send sales
+  /// campaign are different things, and a sales report that cannot tell them
+  /// apart invites the wrong conclusion.
+  audience String?
+
   fetchedAt DateTime @default(now())
 
   @@unique([platform, externalId])
