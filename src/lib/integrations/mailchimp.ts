@@ -108,6 +108,7 @@ export async function subscribe(
 
 type Report = {
   id: string
+  list_name?: string
   campaign_title?: string
   subject_line?: string
   send_time?: string
@@ -176,6 +177,7 @@ export async function ingestMailchimp(
           reach: sent,
           engagements: opens,
           clicks,
+          audience: r.list_name ?? null,
         },
         update: {
           caption: r.subject_line || r.campaign_title || null,
@@ -183,6 +185,7 @@ export async function ingestMailchimp(
           reach: sent,
           engagements: opens,
           clicks,
+          audience: r.list_name ?? null,
           fetchedAt: new Date(),
         },
       })

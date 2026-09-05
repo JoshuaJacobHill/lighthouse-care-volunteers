@@ -152,6 +152,19 @@ async function ingestAds(cfg: Cfg, days: number): Promise<number> {
   for (const r of rows) if (r.ad_name) names.set(r.ad_id, r.ad_name)
 
   for (const [externalId, name] of names) {
+    // The creative's picture, so the report shows the ad rather than its name.
+    // Best-effort: a missing thumbnail is cosmetic, and one creative refusing
+    // to load must not cost us the spend figures.
+    let thumb: string | null = null
+    try {
+      const creative = await graph<{
+        creative?: { thumbnail_url?: string; image_url?: string; object_story_spec?: unknown }
+      }>(externalId, { fields: 'creative{thumbnail_url,image_url}' }, cfg.token)
+      thumb = creative.creative?.image_url ?? creative.creative?.thumbnail_url ?? null
+    } catch {
+      // no creative available
+    }
+
     await prisma.socialPost.upsert({
       where: { platform_externalId: { platform: 'FACEBOOK', externalId } },
       create: {
@@ -159,11 +172,12 @@ async function ingestAds(cfg: Cfg, days: number): Promise<number> {
         kind: 'PAID',
         externalId,
         caption: name,
+        thumbnailUrl: thumb,
         // An ad has no single publish date that means anything; the day-grain
         // rows in AdDayStat carry the timing.
         publishedAt: new Date(),
       },
-      update: { caption: name },
+      update: { caption: name, ...(thumb ? { thumbnailUrl: thumb } : {}) },
     })
   }
 
@@ -219,9 +233,10 @@ async function ingestFacebookPosts(cfg: Cfg, pt: string): Promise<number> {
     story?: string
     created_time: string
     permalink_url?: string
+    full_picture?: string
   }>(
     `${cfg.pageId}/posts`,
-    { fields: 'id,message,story,created_time,permalink_url', limit: '25' },
+    { fields: 'id,message,story,created_time,permalink_url,full_picture', limit: '25' },
     pt,
     Math.ceil(POST_LIMIT / 25),
     true, // we only ever want the most recent POST_LIMIT posts
@@ -268,12 +283,20 @@ async function ingestFacebookPosts(cfg: Cfg, pt: string): Promise<number> {
         externalId: p.id,
         caption: p.message ?? null,
         permalink: p.permalink_url ?? null,
+        thumbnailUrl: p.full_picture ?? null,
         publishedAt: new Date(p.created_time),
         views,
         clicks,
         engagements,
       },
-      update: { views, clicks, engagements, caption: p.message ?? null, fetchedAt: new Date() },
+      update: {
+        views,
+        clicks,
+        engagements,
+        caption: p.message ?? null,
+        thumbnailUrl: p.full_picture ?? null,
+        fetchedAt: new Date(),
+      },
     })
     written++
   }

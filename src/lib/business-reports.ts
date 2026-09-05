@@ -179,6 +179,7 @@ export type TopPost = {
   engagements: number
   clicks: number
   spendCents: number
+  audience: string | null
   /** Engagements as a share of views — comparable across platforms. */
   engagementRate: number
 }
@@ -188,51 +189,129 @@ function rate(engagements: number, views: number): number {
 }
 
 /**
- * Best posts in the period, organic and paid separately.
+ * Best content in the period.
  *
- * Ranked by engagement rate rather than raw engagements, so a modest post that
- * genuinely landed is not buried under one that merely had budget behind it.
+ * Three lists, not one, because the numbers are not comparable across them:
+ *
+ *  - Paid comes from AdDayStat, summed over the days in the period. An ad
+ *    created in July can be September's biggest spender, so filtering it by a
+ *    publish date would answer the wrong question — which is exactly why the
+ *    day-grain table exists.
+ *  - Organic social is filtered by publish date, which is correct for a post.
+ *  - Email is kept separate. An open rate of 10% and a post engagement rate of
+ *    2% are different measurements of different things, and ranking them in one
+ *    list would put every campaign above every post for no real reason.
  */
 export async function getTopSocial(
   period: Period,
   now = new Date(),
   take = 5,
-): Promise<{ range: Range; organic: TopPost[]; paid: TopPost[]; platforms: SocialPlatform[] }> {
+): Promise<{
+  range: Range
+  organic: TopPost[]
+  paid: TopPost[]
+  email: TopPost[]
+  platforms: SocialPlatform[]
+}> {
   const { current } = periodRange(period, now)
+  const endOfDay = new Date(current.to.getTime() + 86_399_999)
 
-  const rows = await prisma.socialPost.findMany({
-    where: { publishedAt: { gte: current.from, lte: new Date(current.to.getTime() + 86_399_999) } },
-    select: {
-      id: true,
-      platform: true,
-      kind: true,
-      caption: true,
-      permalink: true,
-      thumbnailUrl: true,
-      publishedAt: true,
-      views: true,
-      engagements: true,
-      clicks: true,
-      spendCents: true,
-    },
-  })
+  const [posts, adDays] = await Promise.all([
+    prisma.socialPost.findMany({
+      where: { publishedAt: { gte: current.from, lte: endOfDay } },
+      select: {
+        id: true,
+        platform: true,
+        kind: true,
+        externalId: true,
+        caption: true,
+        permalink: true,
+        thumbnailUrl: true,
+        publishedAt: true,
+        views: true,
+        engagements: true,
+        clicks: true,
+        spendCents: true,
+        audience: true,
+      },
+    }),
+    // Paid performance for the days in this period, whenever the ad was made.
+    prisma.adDayStat.groupBy({
+      by: ['platform', 'externalId'],
+      where: { day: { gte: current.from, lte: current.to } },
+      _sum: { views: true, clicks: true, spendCents: true },
+    }),
+  ])
 
-  const shaped: TopPost[] = rows.map((r) => ({
-    ...r,
-    engagementRate: rate(r.engagements, r.views),
-  }))
+  const shape = (r: (typeof posts)[number], over?: { views: number; clicks: number; spendCents: number }): TopPost => {
+    const views = over?.views ?? r.views
+    return {
+      id: r.id,
+      platform: r.platform,
+      kind: r.kind,
+      caption: r.caption,
+      permalink: r.permalink,
+      thumbnailUrl: r.thumbnailUrl,
+      publishedAt: r.publishedAt,
+      views,
+      engagements: r.engagements,
+      clicks: over?.clicks ?? r.clicks,
+      spendCents: over?.spendCents ?? r.spendCents,
+      audience: r.audience,
+      engagementRate: rate(r.engagements, views),
+    }
+  }
 
-  const best = (kind: SocialKind) =>
-    shaped
-      .filter((p) => p.kind === kind)
-      .sort((a, b) => b.engagementRate - a.engagementRate || b.engagements - a.engagements)
-      .slice(0, take)
+  // Ad metadata lives on SocialPost; the numbers come from AdDayStat. Look the
+  // metadata up separately, since an ad spending this month may have been
+  // created outside the period and so is not in `posts`.
+  const adIds = adDays.map((a) => a.externalId)
+  const adMeta = adIds.length
+    ? await prisma.socialPost.findMany({
+        where: { kind: 'PAID', externalId: { in: adIds } },
+        select: {
+          id: true, platform: true, kind: true, externalId: true, caption: true,
+          permalink: true, thumbnailUrl: true, publishedAt: true, views: true,
+          engagements: true, clicks: true, spendCents: true, audience: true,
+        },
+      })
+    : []
+  const metaById = new Map(adMeta.map((m) => [m.externalId, m]))
+
+  const paid = adDays
+    .map((a) => {
+      const meta = metaById.get(a.externalId)
+      if (!meta) return null
+      return shape(meta, {
+        views: a._sum.views ?? 0,
+        clicks: a._sum.clicks ?? 0,
+        spendCents: a._sum.spendCents ?? 0,
+      })
+    })
+    .filter((x): x is TopPost => x !== null)
+    // Spend is the honest ranking for paid: it is what you chose to put behind
+    // it, and engagement rate on an ad mostly reflects budget.
+    .sort((a, b) => b.spendCents - a.spendCents)
+    .slice(0, take)
+
+  const organic = posts
+    .filter((p) => p.kind === 'ORGANIC' && p.platform !== 'MAILCHIMP')
+    .map((p) => shape(p))
+    .sort((a, b) => b.engagementRate - a.engagementRate || b.engagements - a.engagements)
+    .slice(0, take)
+
+  const email = posts
+    .filter((p) => p.platform === 'MAILCHIMP')
+    .map((p) => shape(p))
+    .sort((a, b) => b.engagementRate - a.engagementRate || b.engagements - a.engagements)
+    .slice(0, take)
 
   return {
     range: current,
-    organic: best('ORGANIC'),
-    paid: best('PAID'),
-    platforms: [...new Set(shaped.map((p) => p.platform))],
+    organic,
+    paid,
+    email,
+    platforms: [...new Set(posts.map((p) => p.platform))],
   }
 }
 
@@ -252,4 +331,101 @@ export async function getIngestHealth(): Promise<
     }
   }
   return [...seen.values()]
+}
+
+
+export type ExposureSource = {
+  label: string
+  views: number
+  /** True where the figure is a genuine per-day measurement. */
+  exact: boolean
+}
+
+export type Exposure = {
+  range: Range
+  total: number
+  previousTotal: number
+  previousLabel: string
+  sources: ExposureSource[]
+}
+
+/**
+ * How much content exposure a period produced.
+ *
+ * A deliberately blunt instrument, and worth understanding before anyone quotes
+ * it. Three caveats, all of which the page states plainly:
+ *
+ *  1. Paid and organic overlap. A boosted post is counted by both its own
+ *     insights and the ad's, so the total is higher than the true number of
+ *     showings. Meta gives no way to net this off per post.
+ *  2. Views are showings, not people. One person passing four posts is four.
+ *     Reach is the unique measure, but Facebook retired per-post reach, so it
+ *     is only available for Instagram and ads.
+ *  3. Ad views are measured per day and are exact for the period. Organic and
+ *     email are attributed to the day the content went out, and keep accruing
+ *     afterwards — so a post published on the last day of a period is
+ *     under-counted in it.
+ *
+ * What survives all that is the comparison. The biases are the same every week,
+ * so the direction and size of the change are meaningful even though the
+ * absolute figure is not a headcount.
+ */
+export async function getExposure(period: Period, now = new Date()): Promise<Exposure> {
+  const { current, previous } = periodRange(period, now)
+  const end = (r: Range) => new Date(r.to.getTime() + 86_399_999)
+
+  const [paidNow, paidBefore, organicNow, organicBefore, mailNow, mailBefore] = await Promise.all([
+    prisma.adDayStat.aggregate({
+      where: { day: { gte: current.from, lte: current.to } },
+      _sum: { views: true },
+    }),
+    prisma.adDayStat.aggregate({
+      where: { day: { gte: previous.from, lte: previous.to } },
+      _sum: { views: true },
+    }),
+    prisma.socialPost.aggregate({
+      where: {
+        kind: 'ORGANIC',
+        platform: { in: ['FACEBOOK', 'INSTAGRAM'] },
+        publishedAt: { gte: current.from, lte: end(current) },
+      },
+      _sum: { views: true },
+    }),
+    prisma.socialPost.aggregate({
+      where: {
+        kind: 'ORGANIC',
+        platform: { in: ['FACEBOOK', 'INSTAGRAM'] },
+        publishedAt: { gte: previous.from, lte: end(previous) },
+      },
+      _sum: { views: true },
+    }),
+    // Opens, not sends: an unopened email reached nobody.
+    prisma.socialPost.aggregate({
+      where: { platform: 'MAILCHIMP', publishedAt: { gte: current.from, lte: end(current) } },
+      _sum: { engagements: true },
+    }),
+    prisma.socialPost.aggregate({
+      where: { platform: 'MAILCHIMP', publishedAt: { gte: previous.from, lte: end(previous) } },
+      _sum: { engagements: true },
+    }),
+  ])
+
+  const paid = paidNow._sum.views ?? 0
+  const organic = organicNow._sum.views ?? 0
+  const email = mailNow._sum.engagements ?? 0
+
+  return {
+    range: current,
+    total: paid + organic + email,
+    previousTotal:
+      (paidBefore._sum.views ?? 0) +
+      (organicBefore._sum.views ?? 0) +
+      (mailBefore._sum.engagements ?? 0),
+    previousLabel: previous.label,
+    sources: [
+      { label: 'Paid ads', views: paid, exact: true },
+      { label: 'Organic posts', views: organic, exact: false },
+      { label: 'Email opens', views: email, exact: false },
+    ],
+  }
 }

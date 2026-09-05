@@ -3,6 +3,7 @@ import {
   getSalesReport,
   getTopSocial,
   getIngestHealth,
+  getExposure,
   type Period,
   type TopPost,
 } from '@/lib/business-reports'
@@ -56,6 +57,21 @@ function Delta({ now, before }: { now: number; before: number }) {
 function PostRow({ post }: { post: TopPost }) {
   return (
     <li className="flex items-start gap-3 p-4">
+      {post.thumbnailUrl ? (
+        // A plain img on purpose: these are Meta CDN links that expire and
+        // rotate, so next/image would optimise and cache a URL that later dies.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={post.thumbnailUrl}
+          alt=""
+          loading="lazy"
+          className="h-14 w-14 shrink-0 rounded-xl object-cover"
+        />
+      ) : (
+        <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-neutral-100 text-[10px] font-bold uppercase text-neutral-400">
+          {PLATFORM_LABEL[post.platform]?.slice(0, 2) ?? '—'}
+        </span>
+      )}
       <span className="mt-0.5 rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-bold uppercase text-neutral-600">
         {PLATFORM_LABEL[post.platform] ?? post.platform}
       </span>
@@ -67,7 +83,10 @@ function PostRow({ post }: { post: TopPost }) {
           <span>{num(post.views)} views</span>
           <span>{num(post.engagements)} engaged</span>
           <span className="font-semibold text-neutral-700">{post.engagementRate.toFixed(1)}%</span>
-          {post.spendCents > 0 && <span>{money(post.spendCents)} spent</span>}
+          {post.spendCents > 0 && (
+            <span className="font-semibold text-neutral-700">{money(post.spendCents)} spent</span>
+          )}
+          {post.audience && <span className="text-neutral-400">{post.audience}</span>}
         </p>
       </div>
       {post.permalink && (
@@ -113,14 +132,16 @@ export default async function BusinessReportPage({
   const { period: raw } = await searchParams
   const period: Period = PERIODS.includes(raw as Period) ? (raw as Period) : 'month'
 
-  const [sales, social, health] = await Promise.all([
+  const [sales, social, health, exposure] = await Promise.all([
     getSalesReport(period),
     getTopSocial(period),
     getIngestHealth(),
+    getExposure(period),
   ])
 
   const hasSales = sales.stores.length > 0
-  const hasSocial = social.organic.length > 0 || social.paid.length > 0
+  const hasSocial =
+    social.organic.length > 0 || social.paid.length > 0 || social.email.length > 0
 
   return (
     <div className="-m-4 min-h-full bg-white text-neutral-950 lg:-m-6">
@@ -160,6 +181,38 @@ export default async function BusinessReportPage({
             </p>
           </div>
         </div>
+
+        {/* Exposure. Stated as showings rather than people on purpose — see the
+            note under it, which is not decoration: this number gets quoted. */}
+        {exposure.total > 0 && (
+          <div className="mt-4 rounded-[28px] border border-neutral-200 p-5">
+            <p className="text-sm font-semibold text-neutral-500">Content seen</p>
+            <p className="mt-1 flex items-baseline text-3xl font-extrabold tracking-tight">
+              {num(exposure.total)}
+              <Delta now={exposure.total} before={exposure.previousTotal} />
+            </p>
+            <p className="mt-1 text-xs text-neutral-400">
+              {num(exposure.previousTotal)} in {exposure.previousLabel.toLowerCase()}
+            </p>
+
+            <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
+              {exposure.sources.map((sr) => (
+                <li key={sr.label} className="text-sm">
+                  <span className="font-semibold text-neutral-900">{num(sr.views)}</span>{' '}
+                  <span className="text-neutral-500">{sr.label.toLowerCase()}</span>
+                </li>
+              ))}
+            </ul>
+
+            <p className="mt-4 border-t border-neutral-100 pt-3 text-xs leading-relaxed text-neutral-400">
+              Times content was shown, not people. Someone passing four posts counts four times,
+              and a boosted post is counted by both its own figures and the ad&apos;s. Ad views are
+              measured per day; organic and email are counted against the day they went out and
+              keep accruing after. Compare it week to week — the bias is the same each time — but
+              it is not a headcount.
+            </p>
+          </div>
+        )}
 
         <div className="mt-10 space-y-10">
           <Card title="By store and channel">
@@ -208,19 +261,23 @@ export default async function BusinessReportPage({
             )}
           </Card>
 
-          {hasSocial && (
+          {social.email.length > 0 && (
+            <Card title="Top email">
+              <ul className="divide-y divide-neutral-100 rounded-[28px] border border-neutral-200">
+                {social.email.map((p) => (
+                  <PostRow key={p.id} post={p} />
+                ))}
+              </ul>
+            </Card>
+          )}
+
+          {social.paid.length > 0 && (
             <Card title="Top paid">
-              {social.paid.length === 0 ? (
-                <p className="rounded-[28px] border border-dashed border-neutral-300 px-5 py-8 text-center text-sm text-neutral-500">
-                  No paid activity in this period.
-                </p>
-              ) : (
-                <ul className="divide-y divide-neutral-100 rounded-[28px] border border-neutral-200">
-                  {social.paid.map((p) => (
-                    <PostRow key={p.id} post={p} />
-                  ))}
-                </ul>
-              )}
+              <ul className="divide-y divide-neutral-100 rounded-[28px] border border-neutral-200">
+                {social.paid.map((p) => (
+                  <PostRow key={p.id} post={p} />
+                ))}
+              </ul>
             </Card>
           )}
         </div>
